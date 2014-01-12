@@ -14,7 +14,7 @@
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+        <dagger.version>1.2.0</dagger.version>
         <!-- needed for basepom to make surefire happy, this is annoying! -->
         <argLine>-Xmx128M</argLine>
     </properties>
@@ -22,9 +22,19 @@
         <dependency>
             <groupId>com.squareup.dagger</groupId>
             <artifactId>dagger</artifactId>
-            <version>1.2.0</version>
+            <version>${dagger.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.squareup.dagger</groupId>
+            <artifactId>dagger-compiler</artifactId>
+            <version>${dagger.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.2.1</version>
+        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
