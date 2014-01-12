@@ -16,7 +16,6 @@
  */
 package io.xn.dx;
 
-import org.eclipse.jetty.util.ConcurrentHashSet;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -24,6 +23,7 @@ import java.net.ServerSocket;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 
 /**
@@ -37,7 +37,7 @@ import java.util.TreeSet;
  */
 public class AvailablePortFinder
 {
-    private static final Set<Integer> used = new ConcurrentHashSet<>();
+    private static final Set<Integer> used = new CopyOnWriteArraySet<>();
 
     /**
      * The minimum number of server port number.
