@@ -1,12 +1,15 @@
 package io.xn.dx.cli;
 
 
+import com.google.common.base.Joiner;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import io.airlift.command.Arguments;
 import io.airlift.command.Command;
 import io.airlift.command.Option;
 import io.undertow.Undertow;
+import io.xn.dx.airline.Airline;
 import io.xn.dx.jaxrs.DaggerApplication;
 import io.xn.dx.jaxrs.DaggerApplicationDefaults;
 import io.xn.dx.server.DxServerModule;
@@ -16,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Module(includes = {DxServerModule.class, DaggerApplicationDefaults.class},
         injects = DaggerApplication.class)
@@ -31,6 +35,9 @@ public class ServerCommand implements Runnable
     @Option(name = {"-p", "--port"}, title = "bindPort", description = "Port to bind server to")
     public int bindPort = 7070;
 
+    @Arguments
+    public List<String> message = Airline.newDefaultsList("hello", "world");
+
     @Override
     public void run()
     {
@@ -38,7 +45,7 @@ public class ServerCommand implements Runnable
 
         DaggerApplication app = ObjectGraph.create(this).get(DaggerApplication.class);
         ut.deploy(app);
-        ut.start(Undertow.builder().addListener(app.getBindPort(), app.getBindHost()));
+        ut.start(Undertow.builder().addListener(bindPort, bindHost));
 
         try {
             Thread.currentThread().join();
@@ -50,17 +57,15 @@ public class ServerCommand implements Runnable
     }
 
     @Provides
-    @Named("bind-port")
     @Singleton
-    public Integer getPort()
+    @Named("message")
+    public String getMessage()
     {
-        return bindPort;
+        return Joiner.on(" ").join(message);
     }
 
-    @Provides
-    @Named("bind-host")
-    String getBindHost()
+    public static void main(String[] args)
     {
-        return bindHost;
+        Main.main(new String[]{"server", "this", "is", "a", "test"});
     }
 }
