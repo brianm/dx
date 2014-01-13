@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Airline
 {
+    @SafeVarargs
     public static <T> List<T> newDefaultsList(T... initialValues)
     {
         return new MyList<>(Arrays.asList(initialValues));

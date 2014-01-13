@@ -19,12 +19,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
-@Module(includes = {DxServerModule.class, DaggerApplicationDefaults.class},
-        injects = DaggerApplication.class)
-@Command(name = "server",
-         description = "Run the dx server")
+@Module(includes = {DxServerModule.class, DaggerApplicationDefaults.class}, injects = DaggerApplication.class)
+@Command(name = "server", description = "Run the dx server")
 public class ServerCommand implements Runnable
 {
     private static final Logger log = LoggerFactory.getLogger(ServerCommand.class);
@@ -42,11 +42,9 @@ public class ServerCommand implements Runnable
     public void run()
     {
         UndertowJaxrsServer ut = new UndertowJaxrsServer();
-
         DaggerApplication app = ObjectGraph.create(this).get(DaggerApplication.class);
         ut.deploy(app);
         ut.start(Undertow.builder().addListener(bindPort, bindHost));
-
         try {
             Thread.currentThread().join();
         }
