@@ -20,6 +20,11 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+        <dependency>
             <groupId>com.squareup.dagger</groupId>
             <artifactId>dagger</artifactId>
             <version>${dagger.version}</version>
@@ -29,6 +34,11 @@
             <artifactId>dagger-compiler</artifactId>
             <version>${dagger.version}</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-finder</artifactId>
+            <version>3.16</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
