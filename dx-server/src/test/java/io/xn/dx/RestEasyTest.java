@@ -24,7 +24,7 @@ public class RestEasyTest
     @Test
     public void testFoo() throws Exception
     {
-        int port = AvailablePortFinder.getNextAvailable();
+        int port = AvailablePortFinder.getNextAvailable(6666);
         UndertowJaxrsServer ut = new UndertowJaxrsServer();
 
         ut.deploy(MyApplication.class);

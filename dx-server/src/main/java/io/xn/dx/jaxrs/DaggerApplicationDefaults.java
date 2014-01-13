@@ -7,7 +7,7 @@ import javax.ws.rs.core.Feature;
 import java.util.Collections;
 import java.util.Set;
 
-@Module(injects = DaggerApplication.class)
+@Module(injects = DaggerApplication.class, complete = false, library = true)
 public final class DaggerApplicationDefaults
 {
     @Provides(type= Provides.Type.SET_VALUES)
