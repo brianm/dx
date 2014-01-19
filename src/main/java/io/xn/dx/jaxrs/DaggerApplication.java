@@ -13,8 +13,8 @@ public class DaggerApplication extends Application
 
     @Inject
     public DaggerApplication(Set<Feature> features,
-                             @JaxrsResource Set<Object> resources,
-                             @JaxrsProvider Set<Object> providers)
+                             @Resources Set<Object> resources,
+                             @Providers Set<Object> providers)
     {
         this.singletons = ImmutableSet.builder()
                                       .addAll(features)

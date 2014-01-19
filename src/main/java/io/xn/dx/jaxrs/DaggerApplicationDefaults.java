@@ -16,13 +16,13 @@ public final class DaggerApplicationDefaults
     }
 
     @Provides(type= Provides.Type.SET_VALUES)
-    @JaxrsResource
+    @Resources
     public Set<Object> resources() {
         return Collections.emptySet();
     }
 
     @Provides(type= Provides.Type.SET_VALUES)
-    @JaxrsProvider
+    @Providers
     public Set<Object> providers() {
         return Collections.emptySet();
     }

@@ -9,7 +9,6 @@ import io.airlift.command.Arguments;
 import io.airlift.command.Command;
 import io.airlift.command.Option;
 import io.undertow.Undertow;
-import io.xn.dx.airline.Airline;
 import io.xn.dx.jaxrs.DaggerApplication;
 import io.xn.dx.jaxrs.DaggerApplicationDefaults;
 import io.xn.dx.server.DxServerModule;
@@ -19,8 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 
 @Module(includes = {DxServerModule.class, DaggerApplicationDefaults.class}, injects = DaggerApplication.class)

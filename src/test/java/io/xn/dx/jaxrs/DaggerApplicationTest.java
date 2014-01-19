@@ -63,7 +63,7 @@ public class DaggerApplicationTest
     }
 
     @Provides(type = Provides.Type.SET_VALUES)
-    @JaxrsResource
+    @Resources
     public Set<Object> roots(Root root)
     {
         return ImmutableSet.<Object>of(root);

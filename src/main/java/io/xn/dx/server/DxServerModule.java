@@ -2,7 +2,6 @@ package io.xn.dx.server;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -12,10 +11,12 @@ import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.Provides;
 import io.xn.dx.jaxrs.DaggerApplication;
-import io.xn.dx.jaxrs.JaxrsProvider;
-import io.xn.dx.jaxrs.JaxrsResource;
+import io.xn.dx.jaxrs.Providers;
+import io.xn.dx.jaxrs.Resources;
+import io.xn.dx.jaxrs.ValidationExceptionMapper;
 import io.xn.dx.storage.InMemoryStorage;
 import io.xn.dx.storage.Storage;
+import org.jboss.resteasy.plugins.validation.ValidatorContextResolver;
 
 import javax.inject.Singleton;
 import java.util.Set;
@@ -25,21 +26,24 @@ public class DxServerModule
 {
     @Provides
     @Singleton
-    public Storage storage() {
+    public Storage storage()
+    {
         return new InMemoryStorage();
     }
 
     @Provides(type = Provides.Type.SET_VALUES)
-    @JaxrsResource
+    @Resources
     @Singleton
-    public Set<Object> resources(Root root, ServiceResource sr) {
+    public Set<Object> resources(Root root, ServiceResource sr)
+    {
         return ImmutableSet.of(root, sr);
     }
 
-    @Provides(type= Provides.Type.SET_VALUES)
-    @JaxrsProvider
+    @Provides(type = Provides.Type.SET_VALUES)
+    @Providers
     @Singleton
-    public Set<Object> providers() {
+    public Set<Object> providers()
+    {
         ObjectMapper factory = new ObjectMapper();
         factory.registerModule(new GuavaModule());
         factory.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
@@ -62,6 +66,8 @@ public class DxServerModule
 
         // skip null fields
         factory.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return ImmutableSet.<Object>of(new JacksonJsonProvider(factory));
+        return ImmutableSet.of(new JacksonJsonProvider(factory),
+                               new ValidatorContextResolver(),
+                               new ValidationExceptionMapper());
     }
 }
