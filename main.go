@@ -1,33 +1,26 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
-
 	"github.com/codegangsta/martini"
+	en "github.com/brianm/dx/encoding"
 )
 
 func main() {
 	m := martini.Classic()
-
+	m.Use(en.MapEncoder)
 	t := thing{
 		Name: "Brian",
 		Age:  39,
 	}
 
-	m.Get("/", func(w http.ResponseWriter) string {
+	m.Get("/", func(enc en.Encoder, w http.ResponseWriter) string {
 		w.Header().Set("Content-Type", "application/json")
-		return must(json.Marshal(t))
+		return en.Must(enc.Encode(t))
 	})
 	m.Run()
 }
 
-func must(data []byte, err error) string {
-	if err != nil {
-		panic(err)
-	}
-	return string(data)
-}
 
 type thing struct {
 	Name string `json:"name"`
