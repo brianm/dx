@@ -1,28 +1,28 @@
 package main
 
 import (
-	"net/http"
 	"github.com/codegangsta/martini"
-	en "github.com/brianm/dx/encoding"
+	"github.com/martini-contrib/render"
 )
 
 func main() {
 	m := martini.Classic()
-	m.Use(en.MapEncoder)
+
+	m.Use(render.Renderer())
+
 	t := thing{
 		Name: "Brian",
 		Age:  39,
 	}
 
-	m.Get("/", func(enc en.Encoder, w http.ResponseWriter) string {
-		w.Header().Set("Content-Type", "application/json")
-		return en.Must(enc.Encode(t))
+	m.Get("/", func(r render.Render) {
+		r.JSON(200, t)
 	})
+
 	m.Run()
 }
 
-
 type thing struct {
 	Name string `json:"name"`
-	Age  int `json:"age"`
+	Age  int    `json:"age"`
 }
