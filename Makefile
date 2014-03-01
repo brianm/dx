@@ -7,9 +7,8 @@ WORKSPACE:=$(PWD)/_workspace
 BRANCH:=$(shell git branch | grep '^* ' | awk '{print $$2'})
 
 $(BINARY): workspace
-	git checkout project
-	make
-	git checkout $(BRANCH)
+	GOPATH=$(WORKSPACE) go install $(PACKAGE)
+	cp $(WORKSPACE)/bin/$(BINARY) .
 	@echo "Built binary at ./$(BINARY)"
 
 workspace: $(WORKSPACE)/src/$(PACKAGE)
@@ -23,9 +22,5 @@ $(WORKSPACE)/src/$(PACKAGE):
 clean:
 	rm -rf $(WORKSPACE) $(BINARY)
 
-project: workspace
-	git checkout project
-
-activate: project
-	make activate
-	git checkout $(BRANCH)
+activate: workspace
+	@PROJECT="$(BINARY)" PACKAGE="$(PACKAGE)" /bin/bash ./project.bash activate
