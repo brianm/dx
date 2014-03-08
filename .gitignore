@@ -1,3 +1,4 @@
+*.etcd
 _workspace
 dx
 GPATH
