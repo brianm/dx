@@ -17,3 +17,8 @@ plum="\[\033[38;5;54m\]"
 reset="\[\033[00m\]"
 export PS1="[${plum}$PROJECT${reset}] $PS1"
 cd _workspace/src/$PACKAGE
+
+# replace global go workspace with this dir
+rm ~/.gospace
+ln -s $DIR/_workspace ~/.gospace
+
