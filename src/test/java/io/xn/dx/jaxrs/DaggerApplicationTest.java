@@ -34,7 +34,7 @@ public class DaggerApplicationTest
         DaggerApplication app = ObjectGraph.create(this).get(DaggerApplication.class);
         ut.deploy(app);
 
-        ut.start(Undertow.builder().addListener(port, "0.0.0.0"));
+        ut.start(Undertow.builder().addHttpListener(port, "0.0.0.0"));
 
         HttpClient http = new HttpClient();
         http.start();

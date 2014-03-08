@@ -87,13 +87,13 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>16.0-rc1</version>
+            <version>16.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-servlet</artifactId>
-            <version>1.0.0.Beta31</version>
+            <version>1.0.1.Final</version>
         </dependency>
 
         <dependency>
@@ -121,7 +121,6 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <!-- how do I pull this into parent? -bmc -->
             <version>1.5.0</version>
             <scope>test</scope>
         </dependency>

@@ -2,8 +2,6 @@ package io.xn.dx;
 
 import com.google.common.collect.ImmutableSet;
 import io.undertow.Undertow;
-import io.undertow.client.UndertowClient;
-import io.undertow.client.http.HttpClientConnection;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.junit.Test;
 import org.skife.jetty.v9.client.HttpClient;

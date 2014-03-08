@@ -39,7 +39,7 @@ public class RootTest
         ut = new UndertowJaxrsServer();
         DaggerApplication app = ObjectGraph.create(new TestModule()).get(DaggerApplication.class);
         ut.deploy(app);
-        ut.start(Undertow.builder().addListener(port, "127.0.0.1"));
+        ut.start(Undertow.builder().addHttpListener(port, "127.0.0.1"));
 
         baseUri = URI.create(format("http://localhost:%d/", port));
         http = new HttpClient();
