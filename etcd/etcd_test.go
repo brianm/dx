@@ -1,18 +1,15 @@
 package etcd
 
 import (
-	"testing"
+	"fmt"
 	"github.com/coreos/go-etcd/etcd"
 	"os"
 	"os/exec"
+	"testing"
 	"time"
-	"fmt"
 )
 
-var client = etcd.NewClient([]string{
-	"http://localhost:4001/",
-})
-
+var client = etcd.NewClient([]string{"http://localhost:4001/"})
 var cmd *exec.Cmd
 var tmp string
 
@@ -23,7 +20,7 @@ func before(t *testing.T) {
 	}
 	tmp = fmt.Sprintf("%s/%s/", os.TempDir(), "__etcd_testing")
 
-	cmd = exec.Command(ep, "-name", "test", "-data-dir", tmp)	
+	cmd = exec.Command(ep, "-name", "test", "-data-dir", tmp)
 	e = cmd.Start()
 	if e != nil {
 		t.Errorf("unable to start etcd: %s", e)
@@ -47,15 +44,16 @@ func after(t *testing.T) {
 
 func TestClient(t *testing.T) {
 	before(t)
+	defer after(t)
 	c := checker{t}
 
-	r := c.must(client.Set("/hello", "world", 0))
-	r = c.must(client.Get("/hello", false, true))	
+	c.must(client.Set("/hello", "world", 0))
+	r := c.must(client.Get("/hello", false, true))
 
 	if "world" != r.Node.Value {
 		t.Errorf("unexpected value: %v", r.Node.Value)
 	}
-	after(t)
+
 }
 
 type checker struct {
