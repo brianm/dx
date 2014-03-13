@@ -75,8 +75,6 @@ Pure experiment :-)
       }
     }
     
-So many options :-)
-
 ## Notes 
 
 ### Filtering
