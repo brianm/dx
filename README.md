@@ -137,3 +137,18 @@ Pure experiment :-)
     }
     
 So many options :-)
+
+## API Notes 
+
+### Version 
+
+Version is special, matches happen on semver style, so a query for
+<code>version=2.3</code> would match <code>2.3.0</code>,
+<code>2.3</code>, <code>2.3.2</code> and so on.
+
+### Delta
+
+The delta link is to fetch deltas from the resource fetched -- ie,
+just the changes. A delta will contain another delta link to add from
+there. A delta resource will contain additions, removals, and changes
+(generally changes are on status).
