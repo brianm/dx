@@ -1,6 +1,7 @@
 package server
 
 type Link struct {
+	Href string `json:"href"`
 }
 
 type Service struct {
