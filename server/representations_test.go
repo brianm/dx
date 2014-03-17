@@ -1,9 +1,9 @@
 package server
 
 import (
-	"testing"
 	"encoding/json"
 	"reflect"
+	"testing"
 )
 
 func TestUnmarshalService(t *testing.T) {
@@ -12,16 +12,16 @@ func TestUnmarshalService(t *testing.T) {
            "pool":"general",
            "version":"0.2.1"}`
 
-	s := Service {}
+	s := Service{}
 	err := json.Unmarshal([]byte(j), &s)
 	if err != nil {
 		t.Fatalf("unable to unmarshall: %s", err)
 	}
 
-	expected := Service {
-		Type: "foo",
-		Url: "http://10.0.0.10:8000/",
-		Pool: "general",
+	expected := Service{
+		Type:    "foo",
+		Url:     "http://10.0.0.10:8000/",
+		Pool:    "general",
 		Version: "0.2.1",
 	}
 
@@ -31,10 +31,10 @@ func TestUnmarshalService(t *testing.T) {
 }
 
 func TestMarshallService(t *testing.T) {
-	s := Service {
-		Type: "foo",
-		Url: "http://10.0.0.10:8000/",
-		Pool: "general",
+	s := Service{
+		Type:    "foo",
+		Url:     "http://10.0.0.10:8000/",
+		Pool:    "general",
 		Version: "0.2.1",
 	}
 	bytes, err := json.Marshal(s)
