@@ -111,3 +111,19 @@ interaction, particularly on delta links. I can also easily imagine a
 websocket endpoint to fetch everything and deltas, so delta from 0
 conceptually. You get a bunch of adds in a batch, then get normal
 deltas.
+
+# Representations
+Generally indicated by suffix, ie <code>.json</code>,
+<code>.html</code>, <code>.haproxy</code> etc.
+
+## .json
+The default, except at the root where html defaults :-)
+
+## .html
+Useful human readable pages.
+
+## .haproxy
+Generates an haproxy config for proxying to services!
+
+## .redirect
+Will redirect (302) to a random service matching query.
