@@ -32,8 +32,8 @@ func main() {
 	m.Map(foo.ReturnHandler())
 
 
-	m.Post("/srv", bind.Bind(rep.Service{}), func(s rep.Service) (int, foo.Entity) {
-		return 201, foo.Entity {s}
+	m.Post("/srv", bind.Bind(rep.Service{}), func(s rep.Service) (int, interface{}) {
+		return 201, s
 	})
 
 	m.Run()

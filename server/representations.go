@@ -1,7 +1,5 @@
 package server
 
-import "encoding/json"
-
 type Link struct {
 	Href string `json:"href"`
 }
@@ -14,6 +12,7 @@ type Service struct {
 	Version string          `json:"version"`
 }
 
+/*
 func (s Service) String() string {
 	j, err := json.Marshal(s)
 	if err != nil {
@@ -21,3 +20,4 @@ func (s Service) String() string {
 	}
 	return string(j)
 }
+*/
