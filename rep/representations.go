@@ -1,4 +1,4 @@
-package server
+package rep
 
 type Link struct {
 	Href string `json:"href"`

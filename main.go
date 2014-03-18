@@ -20,21 +20,21 @@ import (
 	"github.com/codegangsta/martini"
 	"github.com/martini-contrib/render"
 
-	"github.com/brianm/dx/foo"
-	rep "github.com/brianm/dx/server"
-	bind "github.com/martini-contrib/binding"
+	"github.com/brianm/dx/rep"
+	"github.com/brianm/henry"
+	"github.com/martini-contrib/binding"
 )
 
 func main() {
 	m := martini.Classic()
 	m.Use(render.Renderer())
+	m.Map(henry.ReturnHandler())
 
-	m.Map(foo.ReturnHandler())
-
-
-	m.Post("/srv", bind.Bind(rep.Service{}), func(s rep.Service) (int, interface{}) {
-		return 201, s
-	})
+	m.Post("/srv",
+		binding.Bind(rep.Service{}),
+		func(s rep.Service) (int, rep.Service) {
+			return 201, s
+		})
 
 	m.Run()
 }

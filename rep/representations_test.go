@@ -1,4 +1,4 @@
-package server
+package rep
 
 import (
 	"encoding/json"
