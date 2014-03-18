@@ -19,11 +19,17 @@ package main
 import (
 	"github.com/codegangsta/martini"
 	"github.com/martini-contrib/render"
+
+	"github.com/brianm/dx/foo"
+	rep "github.com/brianm/dx/server"
+	bind "github.com/martini-contrib/binding"
 )
 
 func main() {
 	m := martini.Classic()
 	m.Use(render.Renderer())
+
+	m.Map(foo.ReturnHandler())
 
 	m.Get("/", func(r render.Render) {
 		r.JSON(200, person{
@@ -37,6 +43,10 @@ func main() {
 			Name: p["name"],
 			Age:  39,
 		})
+	})
+
+	m.Post("/srv", bind.Bind(rep.Service{}), func(s rep.Service) string {
+		return s.String()
 	})
 
 	m.Run()
