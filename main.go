@@ -31,22 +31,9 @@ func main() {
 
 	m.Map(foo.ReturnHandler())
 
-	m.Get("/", func(r render.Render) {
-		r.JSON(200, person{
-			Name: "World",
-			Age:  6,
-		})
-	})
 
-	m.Get("/:name", func(p martini.Params, r render.Render) {
-		r.JSON(200, person{
-			Name: p["name"],
-			Age:  39,
-		})
-	})
-
-	m.Post("/srv", bind.Bind(rep.Service{}), func(s rep.Service) string {
-		return s.String()
+	m.Post("/srv", bind.Bind(rep.Service{}), func(s rep.Service) (int, foo.Entity) {
+		return 201, foo.Entity {s}
 	})
 
 	m.Run()

@@ -2,15 +2,21 @@ package foo
 
 import (
 	"github.com/codegangsta/martini"
+	"encoding/json"
 	"net/http"
 	"reflect"
+	"log"
 )
+
+type Entity struct {
+	Value interface{}
+}
 
 func ReturnHandler() martini.ReturnHandler {
 	return func(ctx martini.Context, vals []reflect.Value) {
 		ctx.Invoke(func(req *http.Request, res http.ResponseWriter) {
 			var responseVal reflect.Value
-			res.Header().Add("Content-Type", "application/json")
+
 			if len(vals) > 1 && vals[0].Kind() == reflect.Int {
 				res.WriteHeader(int(vals[0].Int()))
 				responseVal = vals[1]
@@ -20,6 +26,15 @@ func ReturnHandler() martini.ReturnHandler {
 			if canDeref(responseVal) {
 				responseVal = responseVal.Elem()
 			}
+			if isEntity(responseVal) {
+				entity := responseVal.Interface().(Entity)
+				j, err:= json.Marshal(entity.Value)
+				if err != nil {
+					panic(err)
+				}
+				res.Header().Add("Content-Type", "application/json")
+				res.Write(j)
+			}
 			if isByteSlice(responseVal) {
 				res.Write(responseVal.Bytes())
 			} else {
@@ -27,6 +42,11 @@ func ReturnHandler() martini.ReturnHandler {
 			}
 		})
 	}
+}
+
+func isEntity(val reflect.Value) bool {
+	log.Print(val.Kind())
+	return val == reflect.ValueOf(Entity{})
 }
 
 func isByteSlice(val reflect.Value) bool {
