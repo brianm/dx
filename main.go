@@ -28,7 +28,7 @@ import (
 func main() {
 	m := martini.Classic()
 	m.Use(render.Renderer())
-	m.Map(henry.ReturnHandler())
+	m.Map(henry.Negotiator())
 
 	m.Post("/srv",
 		binding.Bind(rep.Service{}),
