@@ -20,13 +20,13 @@ import (
 	"github.com/brianm/henry"
 	"github.com/codegangsta/martini"
 	"github.com/martini-contrib/binding"
-	"github.com/martini-contrib/render"
+//	"github.com/martini-contrib/render"
 )
 
 func main() {
 	m := martini.Classic()
-	m.Use(render.Renderer())
-	m.Map(henry.Negotiator())
+//	m.Use(render.Renderer())
+	m.Use(henry.Negotiator())
 
 	m.Post("/srv",
 		binding.Bind(rep.Service{}),
