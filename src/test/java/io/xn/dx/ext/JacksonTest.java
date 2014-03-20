@@ -1,4 +1,4 @@
-package io.xn.dx;
+package io.xn.dx.ext;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.JsonNode;

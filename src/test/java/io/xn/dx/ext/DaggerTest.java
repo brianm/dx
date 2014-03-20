@@ -1,9 +1,10 @@
-package io.xn.dx;
+package io.xn.dx.ext;
 
 import com.google.common.collect.ImmutableSet;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import io.xn.dx.NetUtil;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Before;
