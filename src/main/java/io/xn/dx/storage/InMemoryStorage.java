@@ -6,6 +6,8 @@ import io.xn.dx.reps.Link;
 import io.xn.dx.reps.Service;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,5 +30,11 @@ public class InMemoryStorage implements Storage
     public Optional<Service> lookup(final String id)
     {
         return Optional.fromNullable(data.get(id));
+    }
+
+    @Override
+    public Set<Service> query()
+    {
+        return Collections.emptySet();
     }
 }

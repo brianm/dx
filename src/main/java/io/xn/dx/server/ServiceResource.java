@@ -2,6 +2,7 @@ package io.xn.dx.server;
 
 import com.google.common.base.Optional;
 import io.xn.dx.reps.Service;
+import io.xn.dx.reps.ServiceSet;
 import io.xn.dx.storage.Storage;
 
 import javax.inject.Inject;
@@ -13,7 +14,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 
 @Path("/srv")
 @Singleton
@@ -37,6 +40,15 @@ public class ServiceResource
     }
 
     @GET
+    @Produces("application/json")
+    public ServiceSet query()
+    {
+        Set<Service> services = storage.query();
+//        return ServiceSet.(services);
+        throw new UnsupportedOperationException("Not Yet Implemented!");
+    }
+
+    @GET
     @Path("/{id}")
     @Produces("application/json")
     public Service getById(@PathParam("id") String id)
@@ -50,3 +62,4 @@ public class ServiceResource
         }
     }
 }
+
