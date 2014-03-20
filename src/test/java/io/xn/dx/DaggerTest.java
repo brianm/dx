@@ -110,7 +110,7 @@ public class DaggerTest
         @Named("port")
         public Integer port()
         {
-            return AvailablePortFinder.getNextAvailable();
+            return NetUtil.findUnusedPort();
         }
 
         @Provides

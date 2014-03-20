@@ -1,17 +1,15 @@
 package io.xn.dx.server;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import io.undertow.Undertow;
-import io.xn.dx.AvailablePortFinder;
+import io.xn.dx.NetUtil;
 import io.xn.dx.jaxrs.DaggerApplication;
 import io.xn.dx.jaxrs.DaggerApplicationDefaults;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.skife.jetty.v9.client.HttpClient;
@@ -28,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RootTest
 {
 
-    private static final int port = AvailablePortFinder.getNextAvailable();
+    private static int port;
     private static UndertowJaxrsServer ut;
     private static HttpClient http;
     private static URI baseUri;
@@ -39,6 +37,7 @@ public class RootTest
         ut = new UndertowJaxrsServer();
         DaggerApplication app = ObjectGraph.create(new TestModule()).get(DaggerApplication.class);
         ut.deploy(app);
+        port = NetUtil.findUnusedPort();
         ut.start(Undertow.builder().addHttpListener(port, "127.0.0.1"));
 
         baseUri = URI.create(format("http://localhost:%d/", port));

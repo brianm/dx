@@ -1,11 +1,11 @@
 package io.xn.dx.storage;
 
 import com.google.common.base.Optional;
-import io.xn.dx.Descriptor;
+import io.xn.dx.reps.Service;
 
 public interface Storage
 {
-    Descriptor create(Descriptor d);
+    Service create(Service d);
 
-    Optional<Descriptor> lookup(String id);
+    Optional<Service> lookup(String id);
 }

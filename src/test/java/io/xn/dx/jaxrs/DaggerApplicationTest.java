@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import io.undertow.Undertow;
-import io.xn.dx.AvailablePortFinder;
+import io.xn.dx.NetUtil;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.junit.Test;
 import org.skife.jetty.v9.client.HttpClient;
@@ -21,14 +21,13 @@ import java.util.Set;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Module(library = true,
-        includes = DaggerApplicationDefaults.class)
+@Module(library = true, includes = DaggerApplicationDefaults.class)
 public class DaggerApplicationTest
 {
     @Test
     public void testFoo() throws Exception
     {
-        int port = AvailablePortFinder.getNextAvailable(2222);
+        int port = NetUtil.findUnusedPort();
         UndertowJaxrsServer ut = new UndertowJaxrsServer();
 
         DaggerApplication app = ObjectGraph.create(this).get(DaggerApplication.class);
@@ -51,7 +50,7 @@ public class DaggerApplicationTest
     @Singleton
     public Integer getBindPort()
     {
-        return AvailablePortFinder.getNextAvailable();
+        return NetUtil.findUnusedPort();
     }
 
     @Provides

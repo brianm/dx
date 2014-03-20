@@ -2,32 +2,30 @@ package io.xn.dx.storage;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import io.xn.dx.Descriptor;
+import io.xn.dx.reps.Link;
+import io.xn.dx.reps.Service;
 
+import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryStorage implements Storage
 {
-    private final ConcurrentMap<String, Descriptor> data = Maps.newConcurrentMap();
+    private final AtomicLong ids = new AtomicLong(0);
+    private final ConcurrentMap<String, Service> data = Maps.newConcurrentMap();
 
     @Override
-    public Descriptor create(final Descriptor d)
+    public Service create(final Service d)
     {
-        if (d.getInstanceId().isPresent()) {
-            data.put(d.getInstanceId().get(), d);
-            return d;
-        }
-        else {
-            String id = UUID.randomUUID().toString();
-            Descriptor stored  = d.withId(id);
-            data.put(id, stored);
-            return stored;
-        }
+        String id = Long.toString(ids.getAndIncrement());
+        Service stored = d.withId(id);
+        data.put(id, stored);
+        return stored;
     }
 
     @Override
-    public Optional<Descriptor> lookup(final String id)
+    public Optional<Service> lookup(final String id)
     {
         return Optional.fromNullable(data.get(id));
     }
