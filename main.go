@@ -17,27 +17,20 @@ package main
 
 import (
 	"github.com/brianm/dx/rep"
-	"github.com/brianm/henry"
 	"github.com/codegangsta/martini"
 	"github.com/martini-contrib/binding"
-//	"github.com/martini-contrib/render"
+	"github.com/martini-contrib/render"
 )
 
 func main() {
 	m := martini.Classic()
-//	m.Use(render.Renderer())
-	m.Use(henry.Negotiator())
+	m.Use(render.Renderer())
 
 	m.Post("/srv",
 		binding.Bind(rep.Service{}),
-		func(s rep.Service) (int, rep.Service) {
-			return 201, s
+		func(s rep.Service, r render.Render) {
+			r.JSON(201, s)
 		})
 
 	m.Run()
-}
-
-type person struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
 }
