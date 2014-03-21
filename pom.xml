@@ -9,12 +9,13 @@
     <url>http://dx.xn.io/</url>
 
     <parent>
-      <groupId>org.basepom</groupId>
-      <artifactId>basepom-standard-oss</artifactId>
-      <version>5</version>
+        <groupId>org.basepom</groupId>
+        <artifactId>basepom-standard-oss</artifactId>
+        <version>5</version>
     </parent>
 
     <properties>
+        <project.build.targetJdk>1.8</project.build.targetJdk>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dagger.version>1.2.1</dagger.version>
         <jackson.version>2.3.1</jackson.version>
