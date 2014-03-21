@@ -15,12 +15,19 @@
     </parent>
 
     <properties>
-        <project.build.targetJdk>1.8</project.build.targetJdk>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dagger.version>1.2.1</dagger.version>
-        <jackson.version>2.3.1</jackson.version>
         <!-- needed for basepom to make surefire happy, this is annoying! -->
         <argLine>-Xmx128M</argLine>
+        <project.build.targetJdk>1.8</project.build.targetJdk>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <airline.version>0.6</airline.version>
+        <dagger.version>1.2.1</dagger.version>
+        <jackson.version>2.3.1</jackson.version>
+        <logback.version>1.1.1</logback.version>
+        <guava.version>16.0.1</guava.version>
+        <commons-lang3.version>3.2.1</commons-lang3.version>
+        <hibernate-validator.version>5.0.2.Final</hibernate-validator.version>
+        <undertow.version>1.0.1.Final</undertow.version>
+        <resteasy.version>3.0.6.Final</resteasy.version>
     </properties>
     <dependencies>
 
@@ -33,7 +40,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.0.2.Final</version>
+            <version>${hibernate-validator.version}</version>
         </dependency>
 
         <dependency>
@@ -57,12 +64,12 @@
         <dependency>
             <groupId>io.airlift</groupId>
             <artifactId>airline</artifactId>
-            <version>0.6</version>
+            <version>${airline.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.1</version>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.dagger</groupId>
@@ -76,62 +83,57 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.apache.xbean</groupId>
-            <artifactId>xbean-finder</artifactId>
-            <version>3.16</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.2.1</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>16.0.1</version>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-servlet</artifactId>
-            <version>1.0.1.Final</version>
+            <version>${undertow.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-undertow</artifactId>
-            <version>3.0.6.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.skife.jetty.v9</groupId>
-            <artifactId>http-client</artifactId>
-            <version>9.0.4.v20130625</version>
+            <version>${resteasy.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
-            <version>3.0.6.Final</version>
+            <version>${resteasy.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-validator-provider-11</artifactId>
-            <version>3.0.6.Final</version>
+            <version>${resteasy.version}</version>
         </dependency>
 
+        <!-- test dependencies -->
+
+        <dependency>
+            <groupId>org.skife.jetty.v9</groupId>
+            <artifactId>http-client</artifactId>
+            <version>9.0.4.v20130625</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>1.5.0</version>
+            <version>1.6.0</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.squareup.retrofit</groupId>
             <artifactId>retrofit</artifactId>
