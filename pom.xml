@@ -17,7 +17,7 @@
     <properties>
         <!-- needed for basepom to make surefire happy, this is annoying! -->
         <argLine>-Xmx128M</argLine>
-        <project.build.targetJdk>1.8</project.build.targetJdk>
+        <project.build.targetJdk>1.7</project.build.targetJdk>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <airline.version>0.6</airline.version>
         <dagger.version>1.2.1</dagger.version>
@@ -138,6 +138,12 @@
             <groupId>com.squareup.retrofit</groupId>
             <artifactId>retrofit</artifactId>
             <version>1.4.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>jackson-coreutils</artifactId>
+            <version>1.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
