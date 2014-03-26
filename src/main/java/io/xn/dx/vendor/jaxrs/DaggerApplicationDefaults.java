@@ -1,4 +1,4 @@
-package io.xn.dx.jaxrs;
+package io.xn.dx.vendor.jaxrs;
 
 import dagger.Module;
 import dagger.Provides;

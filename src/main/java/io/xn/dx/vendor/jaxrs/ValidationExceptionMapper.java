@@ -1,4 +1,4 @@
-package io.xn.dx.jaxrs;
+package io.xn.dx.vendor.jaxrs;
 
 import com.google.common.collect.Lists;
 import org.jboss.resteasy.api.validation.ResteasyConstraintViolation;

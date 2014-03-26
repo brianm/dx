@@ -1,9 +1,11 @@
 package io.xn.dx.reps;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.zafarkhaja.semver.Version;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import io.xn.dx.vendor.Jackson;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,12 +25,14 @@ public class ServiceSetTest
                               "17",
                               ImmutableList.of(new Service(URI.create("memcached://hello:11211"),
                                                            "general",
-                                                           "1.2.3",
-                                                           "memcached").withId("0"),
+                                                           Version.valueOf("1.2.3"),
+                                                           "memcached",
+                                                           Optional.<Status>absent()).withId("0"),
                                                new Service(URI.create("memcached://world:11211"),
                                                            "general",
-                                                           "1.2.3",
-                                                           "memcached").withId("1")
+                                                           Version.valueOf("1.2.3"),
+                                                           "memcached",
+                                                           Optional.<Status>absent()).withId("1")
                               )
         );
     }
@@ -52,9 +56,8 @@ public class ServiceSetTest
     @Test
     public void testJsonStructure() throws Exception
     {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(ss);
-        JsonNode root = mapper.readTree(json);
+        String json = Jackson.getWriter().writeValueAsString(ss);
+        JsonNode root = Jackson.getReader().readTree(json);
 
         assertThat(root.at("/services").isArray()).isTrue();
         assertThat(root.at("/services").size()).isEqualTo(2);

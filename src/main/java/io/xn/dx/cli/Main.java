@@ -7,7 +7,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        Cli<Runnable> cli = Cli.<Runnable>builder("dx")
+        Cli<Runnable> cli = Cli.<Runnable>builder("gdx")
                                .withCommands(Help.class,
                                              ServerCommand.class)
                                .withDefaultCommand(Help.class)

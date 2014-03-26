@@ -1,4 +1,4 @@
-package io.xn.dx.jaxrs;
+package io.xn.dx.vendor.jaxrs;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -21,8 +21,6 @@ public class DaggerApplication extends Application
                                       .addAll(resources)
                                       .addAll(providers)
                                       .build();
-
-
     }
 
     @Override

@@ -1,21 +1,16 @@
 package io.xn.dx.server;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.common.collect.ImmutableSet;
-import dagger.Module;
-import dagger.Provides;
-import io.xn.dx.jaxrs.DaggerApplication;
-import io.xn.dx.jaxrs.Providers;
-import io.xn.dx.jaxrs.Resources;
-import io.xn.dx.jaxrs.ValidationExceptionMapper;
+import io.xn.dx.vendor.Jackson;
+import io.xn.dx.vendor.jaxrs.DaggerApplication;
+import io.xn.dx.vendor.jaxrs.Providers;
+import io.xn.dx.vendor.jaxrs.Resources;
+import io.xn.dx.vendor.jaxrs.ValidationExceptionMapper;
 import io.xn.dx.storage.InMemoryStorage;
 import io.xn.dx.storage.Storage;
+import dagger.Module;
+import dagger.Provides;
 import org.jboss.resteasy.plugins.validation.ValidatorContextResolver;
 
 import javax.inject.Singleton;
@@ -44,29 +39,7 @@ public class DxServerModule
     @Singleton
     public Set<Object> providers()
     {
-        ObjectMapper factory = new ObjectMapper();
-        factory.registerModule(new GuavaModule());
-        factory.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        factory.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        factory.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
-        factory.configure(SerializationFeature.INDENT_OUTPUT, true);
-
-        // require explicit json fields
-//        factory.disable(MapperFeature.AUTO_DETECT_CREATORS);
-//        factory.disable(MapperFeature.AUTO_DETECT_FIELDS);
-//        factory.disable(MapperFeature.AUTO_DETECT_SETTERS);
-//        factory.disable(MapperFeature.AUTO_DETECT_GETTERS);
-//        factory.disable(MapperFeature.AUTO_DETECT_IS_GETTERS);
-//        factory.disable(MapperFeature.USE_GETTERS_AS_SETTERS);
-//        factory.disable(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
-//        factory.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-        // use ISO dates
-        factory.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        // skip null fields
-        factory.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return ImmutableSet.of(new JacksonJsonProvider(factory),
+        return ImmutableSet.of(new JacksonJsonProvider(Jackson.getMapper()),
                                new ValidatorContextResolver(),
                                new ValidationExceptionMapper());
     }

@@ -1,14 +1,15 @@
-package io.xn.dx.jaxrs;
+package io.xn.dx.vendor;
 
+import io.xn.dx.NetUtil;
+import io.xn.dx.vendor.jaxrs.DaggerApplication;
+import io.xn.dx.vendor.jaxrs.DaggerApplicationDefaults;
+import io.xn.dx.server.DxServerModule;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import io.undertow.Undertow;
-import io.xn.dx.NetUtil;
-import io.xn.dx.server.DxServerModule;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.junit.rules.ExternalResource;
-import retrofit.RestAdapter;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -22,7 +23,6 @@ public class JaxDaggerRule extends ExternalResource
     private final int port = NetUtil.findUnusedPort();
     private UndertowJaxrsServer ut;
     private URI baseUri;
-    private RestAdapter adapter;
 
     @Override
     protected void before() throws Throwable
@@ -33,17 +33,11 @@ public class JaxDaggerRule extends ExternalResource
         ut.start(Undertow.builder().addHttpListener(port, "127.0.0.1"));
 
         baseUri = URI.create(format("http://localhost:%d/", port));
-        adapter = new RestAdapter.Builder().setEndpoint(baseUri.toString()).build();
     }
 
     public URI getBaseUri()
     {
         return baseUri;
-    }
-
-    public <T> T retrofit(Class<T> clientType)
-    {
-        return adapter.create(clientType);
     }
 
     @Override

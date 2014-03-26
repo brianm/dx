@@ -3,6 +3,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>io.xn</groupId>
     <artifactId>dx</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dx</name>
@@ -114,9 +115,20 @@
             <artifactId>resteasy-validator-provider-11</artifactId>
             <version>${resteasy.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.zafarkhaja</groupId>
+            <artifactId>java-semver</artifactId>
+            <version>0.7.2</version>
+        </dependency>
 
         <!-- test dependencies -->
 
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-guava</artifactId>
+            <version>1.1.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.skife.jetty.v9</groupId>
             <artifactId>http-client</artifactId>
@@ -135,15 +147,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.squareup.retrofit</groupId>
-            <artifactId>retrofit</artifactId>
-            <version>1.4.1</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.fge</groupId>
-            <artifactId>jackson-coreutils</artifactId>
-            <version>1.5</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>4.3.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -167,7 +179,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>io.xn.dx.cli.Main</mainClass>
+                                    <mainClass>com.groupon.discovery.cli.Main</mainClass>
                                 </transformer>
                             </transformers>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -190,8 +202,8 @@
                 <artifactId>really-executable-jar-maven-plugin</artifactId>
                 <version>1.1.0</version>
                 <configuration>
-                    <flags>$DX_JAVA_OPTS</flags>
-                    <programFile>dx</programFile>
+                    <flags>$GDX_JAVA_OPTS</flags>
+                    <programFile>gdx</programFile>
                 </configuration>
 
                 <executions>

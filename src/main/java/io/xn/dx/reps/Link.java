@@ -1,6 +1,5 @@
 package io.xn.dx.reps;
 
-import com.google.common.hash.HashCode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

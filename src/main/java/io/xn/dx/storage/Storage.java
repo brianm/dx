@@ -3,6 +3,7 @@ package io.xn.dx.storage;
 import com.google.common.base.Optional;
 import io.xn.dx.reps.Service;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface Storage
@@ -11,5 +12,5 @@ public interface Storage
 
     Optional<Service> lookup(String id);
 
-    Set<Service> query();
+    Set<Service> query(Map<String, String> filters);
 }

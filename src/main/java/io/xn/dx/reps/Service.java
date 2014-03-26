@@ -2,12 +2,12 @@ package io.xn.dx.reps;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.zafarkhaja.semver.Version;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Service
 {
@@ -24,26 +24,39 @@ public class Service
      */
     private final URI url;
     private final String pool;
-    private final String version;
+    private final Version version;
     private final String type;
+    private final Status status;
     private final Map<String, Link> links;
 
     @JsonCreator
     public Service(@JsonProperty("url") URI url,
                    @JsonProperty("pool") String pool,
-                   @JsonProperty("version") String version,
-                   @JsonProperty("type") String type)
+                   @JsonProperty("version") Version version,
+                   @JsonProperty("type") String type,
+                   @JsonProperty("status") Optional<Status> status)
     {
-        this(url, pool, version, type, ImmutableMap.<String, Link>of());
+        this(url, pool, version, type, status.or(Status.unavailable), ImmutableMap.<String, Link>of());
     }
 
-    Service(final URI url, final String pool, final String version, final String type, final Map<String, Link> links)
+    Service(final URI url,
+            final String pool,
+            final Version version,
+            final String type,
+            final Status status,
+            final Map<String, Link> links)
     {
         this.url = url;
         this.pool = pool;
         this.version = version;
         this.type = type;
         this.links = links;
+        this.status = status;
+    }
+
+    public Status getStatus()
+    {
+        return status;
     }
 
     public URI getUrl()
@@ -56,7 +69,7 @@ public class Service
         return pool;
     }
 
-    public String getVersion()
+    public Version getVersion()
     {
         return version;
     }
@@ -78,6 +91,7 @@ public class Service
                            getPool(),
                            getVersion(),
                            getType(),
+                           getStatus(),
                            ImmutableMap.of("self", new Link(URI.create("/srv/" + id)),
                                            "status", new Link(URI.create("/srv/" + id + "/status")))
         );

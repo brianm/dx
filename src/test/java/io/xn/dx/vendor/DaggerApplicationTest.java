@@ -1,6 +1,9 @@
-package io.xn.dx.jaxrs;
+package io.xn.dx.vendor;
 
 import com.google.common.collect.ImmutableSet;
+import io.xn.dx.vendor.jaxrs.DaggerApplication;
+import io.xn.dx.vendor.jaxrs.DaggerApplicationDefaults;
+import io.xn.dx.vendor.jaxrs.Resources;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;

@@ -1,8 +1,9 @@
 package io.xn.dx.server;
 
 import com.google.common.base.Optional;
-import io.xn.dx.reps.Service;
+import com.google.common.collect.Maps;
 import io.xn.dx.reps.ServiceSet;
+import io.xn.dx.reps.Service;
 import io.xn.dx.storage.Storage;
 
 import javax.inject.Inject;
@@ -14,8 +15,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Path("/srv")
@@ -41,11 +46,15 @@ public class ServiceResource
 
     @GET
     @Produces("application/json")
-    public ServiceSet query()
+    public ServiceSet query(@Context UriInfo uri)
     {
-        Set<Service> services = storage.query();
-//        return ServiceSet.(services);
-        throw new UnsupportedOperationException("Not Yet Implemented!");
+        MultivaluedMap<String, String> mvm = uri.getQueryParameters();
+        Map<String, String> filters = Maps.newHashMap();
+        for (Map.Entry<String, List<String>> entry : mvm.entrySet()) {
+            filters.put(entry.getKey(), entry.getValue().get(0));
+        }
+        Set<Service> services = storage.query(filters);
+        return ServiceSet.build(filters, "NO", services);
     }
 
     @GET

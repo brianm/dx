@@ -1,21 +1,23 @@
 package io.xn.dx.server;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import io.xn.dx.jaxrs.JaxDaggerRule;
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import io.xn.dx.ext.JacksonEntity;
+import io.xn.dx.vendor.JaxDaggerRule;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.fluent.Request;
 import org.junit.ClassRule;
 import org.junit.Test;
-import retrofit.http.Body;
-import retrofit.http.EncodedPath;
-import retrofit.http.GET;
-import retrofit.http.POST;
 
-import java.util.Map;
+import java.net.URI;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.xn.dx.assertions.GdxAssertions.assertThat;
+
 
 public class ServiceResourceTest
 {
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     @ClassRule
     public static JaxDaggerRule app = new JaxDaggerRule();
@@ -23,55 +25,48 @@ public class ServiceResourceTest
     @Test
     public void testPostService() throws Exception
     {
-        SrvClient client = app.retrofit(SrvClient.class);
+        HttpResponse r = Request.Post(app.getBaseUri().resolve("/srv"))
+                                .body(new JacksonEntity(ImmutableMap.of("url", "http://foo/",
+                                                                        "type", "foo",
+                                                                        "version", "1.2.3",
+                                                                        "pool", "blue")))
+                                .execute()
+                                .returnResponse();
 
-        Srv srv = client.post(ImmutableMap.of("url", "http://foo/",
-                                              "type", "foo",
-                                              "version", "1.2.3",
-                                              "pool", "blue"));
+        assertThat(r.getStatusLine().getStatusCode()).isEqualTo(201);
 
-        assertThat(srv.url).isEqualTo("http://foo/");
-        assertThat(srv.pool).isEqualTo("blue");
-        assertThat(srv.version).isEqualTo("1.2.3");
-        assertThat(srv.type).isEqualTo("foo");
+        JsonNode root = mapper.readTree(r.getEntity().getContent());
 
-        assertThat(srv._links).containsKey("self");
-        assertThat(srv._links).containsKey("status");
-        assertThat(srv._links.get("self")).containsKey("href");
-        assertThat(srv._links.get("status")).containsKey("href");
+        assertThat(root.at("/_links")).isObject();
+        assertThat(root.at("/_links")).hasField("self");
+        assertThat(root.at("/_links/self")).hasField("href");
+        assertThat(root.at("/_links")).hasField("status");
+        assertThat(root.at("/_links/status")).hasField("href");
 
 
+        assertThat(root.at("/url")).textEquals("http://foo/");
+        assertThat(root.at("/version")).textEquals("1.2.3");
+        assertThat(root.at("/type")).textEquals("foo");
+        assertThat(root.at("/pool")).textEquals("blue");
     }
 
     @Test
     public void testFollowSelfLinkOnPostedService() throws Exception
     {
-        SrvClient client = app.retrofit(SrvClient.class);
+        HttpResponse post_response = Request.Post(app.getBaseUri().resolve("/srv"))
+                                            .body(new JacksonEntity(ImmutableMap.of("url", "http://bar/",
+                                                                                    "type", "foo",
+                                                                                    "version", "1.2.3",
+                                                                                    "pool", "blue")))
+                                            .execute()
+                                            .returnResponse();
 
-        Srv srv = client.post(ImmutableMap.of("url", "http://foo2/",
-                                              "type", "foo",
-                                              "version", "1.2.3",
-                                              "pool", "blue"));
+        JsonNode post_root = mapper.readTree(post_response.getEntity().getContent());
+        URI self_url = app.getBaseUri().resolve(post_root.at("/_links/self/href").textValue());
 
-        Srv srv2 = client.getSrv(srv._links.get("self").get("href"));
-        assertThat(EqualsBuilder.reflectionEquals(srv, srv2)).isTrue();
-    }
+        HttpResponse get_response = Request.Get(self_url).execute().returnResponse();
+        JsonNode get_root = mapper.readTree(get_response.getEntity().getContent());
 
-    public static interface SrvClient
-    {
-        @POST("/srv")
-        public Srv post(@Body Map<String, String> srv);
-
-        @GET("/{path}")
-        public Srv getSrv(@EncodedPath("path") String path);
-    }
-
-    public static class Srv
-    {
-        public Map<String, Map<String, String>> _links;
-        public String url;
-        public String type;
-        public String pool;
-        public String version;
+        assertThat(get_root).isEqualTo(post_root);
     }
 }

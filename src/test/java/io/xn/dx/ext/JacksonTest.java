@@ -28,7 +28,7 @@ public class JacksonTest
                "foo.rb:\n" +
                "  path: /tmp/\n" +
                "bar.jar:\n" +
-               "  url: http://dx.xn.io/\n";
+               "  url: http://groupon.xn.io/\n";
     }
 
     @Test
