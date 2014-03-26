@@ -4,7 +4,9 @@ import org.junit.Test;
 
 import java.util.regex.Matcher;
 
-import static io.xn.dx.assertions.GdxAssertions.assertThat;
+import static org.assertj.guava.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static io.xn.dx.assertions.VersionAssert.assertThat;
 
 
 public class VersionTest
@@ -65,6 +67,28 @@ public class VersionTest
         assertThat(v.getPatch()).contains(3);
         assertThat(v.getPre()).isAbsent();
         assertThat(v.getBuild()).isAbsent();
+    }
 
+    @Test
+    public void testToStringRoundTrips() throws Exception
+    {
+        String vs = "1.2-SNAPSHOT+12.34";
+        String rt_vs = Version.valueOf(vs).toString();
+        assertThat(rt_vs).isEqualTo(vs);
+    }
+
+    @Test
+    public void testSatisfies() throws Exception
+    {
+        assertThat(Version.valueOf("1.1")).satisfies("1");
+        assertThat(Version.valueOf("1.1")).doesNotSatisfy("2");
+
+        assertThat(Version.valueOf("1.3")).satisfies("1.2");
+        assertThat(Version.valueOf("1.2")).doesNotSatisfy("1.3");
+
+        assertThat(Version.valueOf("1.2.4")).satisfies("1.2.3");
+        assertThat(Version.valueOf("1.2.3")).doesNotSatisfy("1.2.4");
+
+        assertThat(Version.valueOf("2.1")).doesNotSatisfy("2.1.2");
     }
 }

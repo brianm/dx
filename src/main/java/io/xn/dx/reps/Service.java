@@ -2,9 +2,9 @@ package io.xn.dx.reps;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.zafarkhaja.semver.Version;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import io.xn.dx.version.Version;
 
 import java.net.URI;
 import java.util.Map;

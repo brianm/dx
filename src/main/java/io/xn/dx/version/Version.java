@@ -1,11 +1,25 @@
 package io.xn.dx.version;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@JsonSerialize(using = Version.JacksonSerializer.class)
+@JsonDeserialize(using = Version.JacksonDeserializer.class)
 public class Version
 {
     public static Pattern VERSION_PATTERN = Pattern.compile("(\\d+)              #major \n" +
@@ -13,7 +27,8 @@ public class Version
                                                             "(?:\\.(\\d+))?      #patch \n" +
                                                             "(?:-([\\w\\.]+))?   #prerelease \n" +
                                                             "(?:\\+([\\w\\.]+))? #buildnumber",
-                                                            Pattern.COMMENTS);
+                                                            Pattern.COMMENTS
+    );
     private final int major;
     private final Optional<Integer> minor;
     private final Optional<Integer> patch;
@@ -75,6 +90,37 @@ public class Version
         return new Version(major, minor, patch, pre, build);
     }
 
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder().append(getMajor());
+        if (getMinor().isPresent()) {
+            builder.append(".").append(getMinor().get());
+            if (getPatch().isPresent()) {
+                builder.append(".").append(getPatch().get());
+            }
+        }
+        if (getPre().isPresent()) {
+            builder.append("-").append(getPre().get());
+        }
+        if (getBuild().isPresent()) {
+            builder.append("+").append(getBuild().get());
+        }
+
+        return builder.toString();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(final Object obj)
+    {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
     private static Function<String, Integer> ATOI = new Function<String, Integer>()
     {
         @Override
@@ -83,4 +129,65 @@ public class Version
             return Integer.parseInt(input);
         }
     };
+
+    public boolean satisfies(final Version that)
+    {
+        // majors are compat
+        if (this.getMajor() != that.getMajor()) {
+            return false;
+        }
+
+        // this.minor < that.minor
+        if (that.getMinor().isPresent()) {
+            if (this.getMinor().isPresent()) {
+                int this_minor = this.getMinor().get();
+                int that_minor = that.getMinor().get();
+                if (this_minor < that_minor) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        // this.patch < that.patch
+        if (that.getPatch().isPresent()) {
+            if (this.getPatch().isPresent()) {
+                int this_patch = this.getPatch().get();
+                int that_patch = that.getPatch().get();
+                if (this_patch < that_patch) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static class JacksonSerializer extends JsonSerializer<Version>
+    {
+
+        @Override
+        public void serialize(final Version value,
+                              final JsonGenerator jgen,
+                              final SerializerProvider provider) throws IOException, JsonProcessingException
+        {
+            jgen.writeString(value.toString());
+        }
+    }
+
+    public static class JacksonDeserializer extends JsonDeserializer<Version>
+    {
+
+        @Override
+        public Version deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException, JsonProcessingException
+        {
+            String s = jp.getValueAsString();
+            return Version.valueOf(s);
+        }
+    }
 }

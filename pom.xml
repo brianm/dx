@@ -115,11 +115,6 @@
             <artifactId>resteasy-validator-provider-11</artifactId>
             <version>${resteasy.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.zafarkhaja</groupId>
-            <artifactId>java-semver</artifactId>
-            <version>0.7.2</version>
-        </dependency>
 
         <!-- test dependencies -->
 

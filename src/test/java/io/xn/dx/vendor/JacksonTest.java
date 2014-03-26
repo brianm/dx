@@ -1,9 +1,9 @@
 package io.xn.dx.vendor;
 
-import com.github.zafarkhaja.semver.Version;
+import io.xn.dx.version.Version;
 import org.junit.Test;
 
-import static io.xn.dx.assertions.GdxAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JacksonTest
 {

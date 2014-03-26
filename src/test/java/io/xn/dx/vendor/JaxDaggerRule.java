@@ -1,13 +1,13 @@
 package io.xn.dx.vendor;
 
-import io.xn.dx.NetUtil;
-import io.xn.dx.vendor.jaxrs.DaggerApplication;
-import io.xn.dx.vendor.jaxrs.DaggerApplicationDefaults;
-import io.xn.dx.server.DxServerModule;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import io.undertow.Undertow;
+import io.xn.dx.NetUtil;
+import io.xn.dx.server.DxServerModule;
+import io.xn.dx.vendor.jaxrs.DaggerApplication;
+import io.xn.dx.vendor.jaxrs.DaggerApplicationDefaults;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.junit.rules.ExternalResource;
 

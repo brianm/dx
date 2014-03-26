@@ -1,14 +1,14 @@
 package io.xn.dx.reps;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.zafarkhaja.semver.Version;
+import io.xn.dx.version.Version;
 import com.google.common.base.Optional;
 import io.xn.dx.vendor.Jackson;
 import org.junit.Test;
 
 import java.net.URI;
 
-import static io.xn.dx.assertions.GdxAssertions.assertThat;
+import static io.xn.dx.assertions.JsonNodeAssert.assertThat;
 
 public class ServiceTest
 {

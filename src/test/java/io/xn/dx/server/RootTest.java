@@ -2,12 +2,12 @@ package io.xn.dx.server;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Stopwatch;
-import io.xn.dx.vendor.Jackson;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import io.undertow.Undertow;
 import io.xn.dx.NetUtil;
+import io.xn.dx.vendor.Jackson;
 import io.xn.dx.vendor.jaxrs.DaggerApplication;
 import io.xn.dx.vendor.jaxrs.DaggerApplicationDefaults;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
@@ -22,8 +22,9 @@ import javax.inject.Singleton;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-import static io.xn.dx.assertions.GdxAssertions.assertThat;
 import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
+import static io.xn.dx.assertions.JsonNodeAssert.assertThat;
 
 public class RootTest
 {

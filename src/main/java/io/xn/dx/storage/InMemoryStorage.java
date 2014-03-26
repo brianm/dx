@@ -111,7 +111,8 @@ public class InMemoryStorage implements Storage
         @Override
         public boolean apply(final Service input)
         {
-            return input.getVersion().satisfies(value);
+            throw new UnsupportedOperationException("Not Yet Implemented!");
+//            return input.getVersion().satisfies(value);
         }
     }
 }

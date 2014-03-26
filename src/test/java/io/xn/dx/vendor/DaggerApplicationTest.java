@@ -1,14 +1,14 @@
 package io.xn.dx.vendor;
 
 import com.google.common.collect.ImmutableSet;
-import io.xn.dx.vendor.jaxrs.DaggerApplication;
-import io.xn.dx.vendor.jaxrs.DaggerApplicationDefaults;
-import io.xn.dx.vendor.jaxrs.Resources;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import io.undertow.Undertow;
 import io.xn.dx.NetUtil;
+import io.xn.dx.vendor.jaxrs.DaggerApplication;
+import io.xn.dx.vendor.jaxrs.DaggerApplicationDefaults;
+import io.xn.dx.vendor.jaxrs.Resources;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.junit.Test;
 import org.skife.jetty.v9.client.HttpClient;

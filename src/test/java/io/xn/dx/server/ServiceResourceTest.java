@@ -12,7 +12,8 @@ import org.junit.Test;
 
 import java.net.URI;
 
-import static io.xn.dx.assertions.GdxAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static io.xn.dx.assertions.JsonNodeAssert.assertThat;
 
 
 public class ServiceResourceTest

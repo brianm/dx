@@ -2,8 +2,8 @@ package io.xn.dx.server;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import io.xn.dx.reps.ServiceSet;
 import io.xn.dx.reps.Service;
+import io.xn.dx.reps.ServiceSet;
 import io.xn.dx.storage.Storage;
 
 import javax.inject.Inject;
