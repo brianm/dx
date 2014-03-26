@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
+import io.xn.dx.version.Version;
 
 import java.util.List;
 import java.util.Map;
@@ -104,15 +105,14 @@ public class InMemoryStorage implements Storage
 
     private class VersionFilter implements Predicate<Service>
     {
-        private final String value;
+        private final Version value;
 
-        public VersionFilter(final String value) {this.value = value;}
+        public VersionFilter(final String value) {this.value = Version.valueOf(value);}
 
         @Override
         public boolean apply(final Service input)
         {
-            throw new UnsupportedOperationException("Not Yet Implemented!");
-//            return input.getVersion().satisfies(value);
+            return input.getVersion().satisfies(value);
         }
     }
 }
