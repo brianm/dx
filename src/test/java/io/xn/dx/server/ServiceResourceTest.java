@@ -1,27 +1,32 @@
 package io.xn.dx.server;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.common.collect.ImmutableMap;
+import io.xn.dx.HTTP;
 import io.xn.dx.ext.JacksonEntity;
+import io.xn.dx.vendor.Jackson;
 import io.xn.dx.vendor.JaxDaggerRule;
+import io.xn.dx.version.Version;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static io.xn.dx.assertions.JsonNodeAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class ServiceResourceTest
 {
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectReader mapper = Jackson.getReader();
 
-    @ClassRule
-    public static JaxDaggerRule app = new JaxDaggerRule();
+    @Rule
+    public JaxDaggerRule app = new JaxDaggerRule();
 
     @Test
     public void testPostService() throws Exception
@@ -69,5 +74,56 @@ public class ServiceResourceTest
         JsonNode get_root = mapper.readTree(get_response.getEntity().getContent());
 
         assertThat(get_root).isEqualTo(post_root);
+    }
+
+    @Test
+    public void testQueryAll() throws Exception
+    {
+        postSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
+        postSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
+
+        JsonNode root = HTTP.GET(app.getBaseUri().resolve("/srv"));
+
+        assertThat(root.at("/services")).isArray();
+        assertThat(root.at("/services")).hasSize(2);
+        assertThat(root.at("/services/0/type")).textEquals("foo");
+        assertThat(root.at("/services/1/type")).textEquals("foo");
+    }
+
+    @Test
+    public void testQueryVersionFilter() throws Exception
+    {
+        postSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
+        postSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
+
+        JsonNode root = HTTP.GET(app.getBaseUri().resolve("/srv?version=1.3"));
+
+        assertThat(root.at("/services")).isArray();
+        assertThat(root.at("/services")).hasSize(1);
+        assertThat(root.at("/services/0/type")).textEquals("foo");
+    }
+
+    @Test
+    public void testDeltaUri() throws Exception
+    {
+        postSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
+        postSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
+
+        JsonNode root = HTTP.GET(app.getBaseUri().resolve("/srv"));
+        assertThat(root.at("/_links")).hasField("delta");
+        assertThat(root.at("/_links/delta")).hasField("href");
+    }
+
+
+    private URI postSrv(URI url, String type, Version version, String pool) throws IOException, URISyntaxException
+    {
+        HttpResponse post_response = Request.Post(app.getBaseUri().resolve("/srv"))
+                                            .body(new JacksonEntity(ImmutableMap.of("url", url,
+                                                                                    "type", type,
+                                                                                    "version", version.toString(),
+                                                                                    "pool", pool)))
+                                            .execute()
+                                            .returnResponse();
+        return new URI(post_response.getFirstHeader("Location").getValue());
     }
 }
