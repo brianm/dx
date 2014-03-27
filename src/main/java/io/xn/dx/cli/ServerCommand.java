@@ -32,9 +32,6 @@ public class ServerCommand implements Runnable
     @Option(name = {"-p", "--port"}, title = "bindPort", description = "Port to bind server to")
     public int bindPort = 7070;
 
-    @Arguments
-    public List<String> message = Airline.newDefaultsList("hello", "world");
-
     @Override
     public void run()
     {
@@ -49,18 +46,5 @@ public class ServerCommand implements Runnable
             log.info("shutting down");
             ut.stop();
         }
-    }
-
-    @Provides
-    @Singleton
-    @Named("message")
-    public String getMessage()
-    {
-        return Joiner.on(" ").join(message);
-    }
-
-    public static void main(String[] args)
-    {
-        Main.main(new String[]{"server", "this", "is", "a", "test"});
     }
 }

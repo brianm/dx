@@ -53,12 +53,6 @@ public class JaxDaggerRule extends ExternalResource
     @Module(includes = {DxServerModule.class, DaggerApplicationDefaults.class}, injects = DaggerApplication.class)
     public static class TestModule
     {
-        @Provides
-        @Singleton
-        @Named("message")
-        public String getMessage()
-        {
-            return "testing!";
-        }
+
     }
 }
