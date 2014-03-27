@@ -22,11 +22,11 @@ import java.util.regex.Pattern;
 @JsonDeserialize(using = Version.JacksonDeserializer.class)
 public class Version
 {
-    public static Pattern VERSION_PATTERN = Pattern.compile("(\\d+)              #major \n" +
-                                                            "(?:\\.(\\d+))?      #minor \n" +
-                                                            "(?:\\.(\\d+))?      #patch \n" +
-                                                            "(?:-([\\w\\.]+))?   #prerelease \n" +
-                                                            "(?:\\+([\\w\\.]+))? #buildnumber",
+    public static Pattern VERSION_PATTERN = Pattern.compile("(\\d+)                     #major \n" +
+                                                            "(?:\\.(\\d+))?             #minor \n" +
+                                                            "(?:\\.(\\d+))?             #patch \n" +
+                                                            "(?:-([A-Za-z0-9-\\.]+))?   #prerelease \n" +
+                                                            "(?:\\+([A-Za-z0-9-\\.]+))? #buildnumber",
                                                             Pattern.COMMENTS
     );
     private final int major;
@@ -41,8 +41,6 @@ public class Version
                    final Optional<String> pre,
                    final Optional<String> build)
     {
-
-
         this.major = major;
         this.minor = minor;
         this.patch = patch;
@@ -170,7 +168,6 @@ public class Version
 
     public static class JacksonSerializer extends JsonSerializer<Version>
     {
-
         @Override
         public void serialize(final Version value,
                               final JsonGenerator jgen,
@@ -182,9 +179,8 @@ public class Version
 
     public static class JacksonDeserializer extends JsonDeserializer<Version>
     {
-
         @Override
-        public Version deserialize(final JsonParser jp, final DeserializationContext ctxt) throws IOException, JsonProcessingException
+        public Version deserialize(final JsonParser jp, final DeserializationContext ctx) throws IOException
         {
             String s = jp.getValueAsString();
             return Version.valueOf(s);
