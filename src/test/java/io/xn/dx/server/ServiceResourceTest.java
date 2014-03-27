@@ -3,7 +3,7 @@ package io.xn.dx.server;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.common.collect.ImmutableMap;
-import io.xn.dx.HTTP;
+import io.xn.dx.Json;
 import io.xn.dx.ext.JacksonEntity;
 import io.xn.dx.vendor.Jackson;
 import io.xn.dx.vendor.JaxDaggerRule;
@@ -15,7 +15,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static io.xn.dx.assertions.JsonNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +30,7 @@ public class ServiceResourceTest
     @Test
     public void testPostService() throws Exception
     {
-        HttpResponse r = Request.Post(app.getBaseUri().resolve("/srv"))
+        HttpResponse r = Request.Post(app.resolve("/srv"))
                                 .body(new JacksonEntity(ImmutableMap.of("url", "http://foo/",
                                                                         "type", "foo",
                                                                         "version", "1.2.3",
@@ -59,7 +58,7 @@ public class ServiceResourceTest
     @Test
     public void testFollowSelfLinkOnPostedService() throws Exception
     {
-        HttpResponse post_response = Request.Post(app.getBaseUri().resolve("/srv"))
+        HttpResponse post_response = Request.Post(app.resolve("/srv"))
                                             .body(new JacksonEntity(ImmutableMap.of("url", "http://bar/",
                                                                                     "type", "foo",
                                                                                     "version", "1.2.3",
@@ -79,10 +78,10 @@ public class ServiceResourceTest
     @Test
     public void testQueryAll() throws Exception
     {
-        postSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
-        postSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
+        createSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
+        createSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
 
-        JsonNode root = HTTP.GET(app.getBaseUri().resolve("/srv"));
+        JsonNode root = Json.GET(app.resolve("/srv"));
 
         assertThat(root.at("/services")).isArray();
         assertThat(root.at("/services")).hasSize(2);
@@ -93,10 +92,10 @@ public class ServiceResourceTest
     @Test
     public void testQueryVersionFilter() throws Exception
     {
-        postSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
-        postSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
+        createSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
+        createSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
 
-        JsonNode root = HTTP.GET(app.getBaseUri().resolve("/srv?version=1.3"));
+        JsonNode root = Json.GET(app.resolve("/srv?version=1.3"));
 
         assertThat(root.at("/services")).isArray();
         assertThat(root.at("/services")).hasSize(1);
@@ -106,24 +105,20 @@ public class ServiceResourceTest
     @Test
     public void testDeltaUri() throws Exception
     {
-        postSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
-        postSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
+        createSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
+        createSrv(URI.create("http://foo-2.snc1/bar"), "foo", Version.valueOf("1.3.0+2014.03.26"), "general");
 
-        JsonNode root = HTTP.GET(app.getBaseUri().resolve("/srv"));
+        JsonNode root = Json.GET(app.resolve("/srv"));
         assertThat(root.at("/_links")).hasField("delta");
         assertThat(root.at("/_links/delta")).hasField("href");
     }
 
 
-    private URI postSrv(URI url, String type, Version version, String pool) throws IOException, URISyntaxException
+    private void createSrv(URI url, String type, Version version, String pool) throws IOException
     {
-        HttpResponse post_response = Request.Post(app.getBaseUri().resolve("/srv"))
-                                            .body(new JacksonEntity(ImmutableMap.of("url", url,
-                                                                                    "type", type,
-                                                                                    "version", version.toString(),
-                                                                                    "pool", pool)))
-                                            .execute()
-                                            .returnResponse();
-        return new URI(post_response.getFirstHeader("Location").getValue());
+        Json.POST(app.resolve("srv"), ImmutableMap.of("url", url,
+                                                      "type", type,
+                                                      "version", version.toString(),
+                                                      "pool", pool));
     }
 }

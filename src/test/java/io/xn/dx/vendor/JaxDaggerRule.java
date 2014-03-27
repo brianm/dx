@@ -40,6 +40,10 @@ public class JaxDaggerRule extends ExternalResource
         return baseUri;
     }
 
+    public URI resolve(String path) {
+        return getBaseUri().resolve(path);
+    }
+
     @Override
     protected void after()
     {
