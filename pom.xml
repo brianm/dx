@@ -27,7 +27,7 @@
         <guava.version>16.0.1</guava.version>
         <commons-lang3.version>3.2.1</commons-lang3.version>
         <hibernate-validator.version>5.0.2.Final</hibernate-validator.version>
-        <undertow.version>1.0.1.Final</undertow.version>
+        <undertow.version>1.0.3.Final</undertow.version>
         <resteasy.version>3.0.6.Final</resteasy.version>
     </properties>
     <dependencies>
@@ -97,6 +97,11 @@
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-servlet</artifactId>
+            <version>${undertow.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-websockets-jsr</artifactId>
             <version>${undertow.version}</version>
         </dependency>
 

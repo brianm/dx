@@ -33,6 +33,7 @@ Service Discovery and Registration Service
 
     GET /srv?type=memcached HTTP/1.1
     
+    
     HTTP/1.1 200 Ok
     
     {
