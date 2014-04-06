@@ -4,9 +4,17 @@ Service Discovery and Registration Service
 
 # TODO
 ## Support TTL Announcements
-We should be able to make an announcement with a TTL. If a srv is posted with
-a TTL, a renew link will be available which can be used to extend the ttl to a
-new duration.
+
+We should be able to make an announcement with a TTL. If a srv is
+posted with a TTL, a renew link will be available which can be used to
+extend the ttl to a new duration.
+
+## Sidecar Service
+
+Allow dx to start as a sidecar service for another service -- it will
+post and maintain an announcement on behalf of that service as long as
+it runs. This generally isn't as reliable as the service doing the
+announcement itself, but is still pretty useful :-)
 
 # API
 ## Basic service registration:

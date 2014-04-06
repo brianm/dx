@@ -55,6 +55,16 @@ public class JsonNodeAssert extends AbstractAssert<JsonNodeAssert, JsonNode>
         return this;
     }
 
+    public JsonNodeAssert doesNotHaveField(final String fieldName)
+    {
+        isObject();
+        if (actual.has(fieldName)) {
+            failWithMessage("expected no field named %s, but it exists and is '%s'",
+                            fieldName, actual.at("/" + fieldName));
+        }
+        return this;
+    }
+
     public JsonNodeAssert hasSize(final int size)
     {
         isArray();
