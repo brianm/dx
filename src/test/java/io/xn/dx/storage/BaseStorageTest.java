@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.guava.api.Assertions.assertThat;
 
 public abstract class BaseStorageTest
 {
@@ -49,6 +50,14 @@ public abstract class BaseStorageTest
     {
         this.releaseStorage(storage);
         storage = null;
+    }
+
+    @Test
+    public void testRead() throws Exception
+    {
+        Optional<Service> foo2 = storage.lookup(foo.getId().get());
+        assertThat(foo2).isPresent();
+        assertThat(foo2).contains(foo);
     }
 
     @Test

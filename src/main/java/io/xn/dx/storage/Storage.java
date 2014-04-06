@@ -8,9 +8,9 @@ import java.util.Set;
 
 public interface Storage
 {
-    Service create(Service d);
+    Service create(Service d) throws StorageException;
 
-    Optional<Service> lookup(String id);
+    Optional<Service> lookup(String id) throws StorageException;
 
-    Set<Service> query(Map<String, String> filters);
+    Set<Service> query(Map<String, String> filters) throws StorageException;
 }

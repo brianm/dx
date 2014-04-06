@@ -1,5 +1,7 @@
 package io.xn.dx.reps;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -10,7 +12,8 @@ public class Link
 {
     private final URI href;
 
-    public Link(final URI href)
+    @JsonCreator
+    public Link(@JsonProperty("href") final URI href)
     {
         this.href = href;
     }
