@@ -9,6 +9,11 @@ We should be able to make an announcement with a TTL. If a srv is
 posted with a TTL, a renew link will be available which can be used to
 extend the ttl to a new duration.
 
+## Make ZooKeeper Storage Reasonably Efficient
+
+Right now it is maximally inefficient, get smarter about queries and
+lookups by using a local cache. 
+
 ## Sidecar Service
 
 Allow dx to start as a sidecar service for another service -- it will
