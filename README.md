@@ -9,6 +9,12 @@ We should be able to make an announcement with a TTL. If a srv is
 posted with a TTL, a renew link will be available which can be used to
 extend the ttl to a new duration.
 
+### ZooKeeper Implementation Notes
+
+Because ZK has no concept of TTL, and ephemeral isn't what we want (dx
+server holding ephemeral node goign down shouldnt whack the node),
+we'll use ZK leader election and do TTL counts on the leader.
+
 ## Make ZooKeeper Storage Reasonably Efficient
 
 Right now it is maximally inefficient, get smarter about queries and

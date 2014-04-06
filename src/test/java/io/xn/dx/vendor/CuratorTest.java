@@ -25,4 +25,11 @@ public class CuratorTest
 
         assertThat(bytes).isEqualTo("world".getBytes());
     }
+
+    @Test
+    public void testTtl() throws Exception
+    {
+        CuratorFramework cf = zk.getCurator();
+        cf.create().withMode(CreateM)
+    }
 }
