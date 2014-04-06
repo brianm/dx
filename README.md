@@ -2,29 +2,35 @@
 
 Service Discovery and Registration Service
 
+# TODO
+## Support TTL Announcements
+We should be able to make an announcement with a TTL. If a srv is posted with
+a TTL, a renew link will be available which can be used to extend the ttl to a
+new duration.
+
 # API
 ## Basic service registration:
 
     POST /srv HTTP/1.1
     {
-      type: "memcached", 
-      url: "memcached://10.0.1.100:11211", 
+      type: "memcached",
+      url: "memcached://10.0.1.100:11211",
       pool: "general",
       version: "0.2.3"
     }
-        
-    
+
+
     HTTP/1.1 201 Created
     Location: /srv/abc123
-    
+
     {
       _links: {
           self: { href: "/srv/123abc" },
           status: { href: "/srv/123abc/status" },
       },
       status: "ok",
-      type: "memcached", 
-      url: "memcached://10.0.1.100:11211", 
+      type: "memcached",
+      url: "memcached://10.0.1.100:11211",
       pool: "general",
       version: "0.2.3"
     }
@@ -32,10 +38,10 @@ Service Discovery and Registration Service
 ## Fetch Services by Type
 
     GET /srv?type=memcached HTTP/1.1
-    
-    
+
+
     HTTP/1.1 200 Ok
-    
+
     {
       _links: {
           self: { href: "/srv?type=memcached" },
@@ -48,8 +54,8 @@ Service Discovery and Registration Service
         status: { href: "/srv/123abc/status" },
         },
         status: "ok",
-        type: "memcached", 
-        url: "memcached://10.0.1.100:11211", 
+        type: "memcached",
+        url: "memcached://10.0.1.100:11211",
         pool: "general",
         version: "0.2.3"
       },
@@ -59,14 +65,14 @@ Service Discovery and Registration Service
           status: { href: "/srv/z7h6/status" },
         },
         status: "ok",
-        type: "memcached", 
-        url: "memcached://10.0.1.101:11211", 
+        type: "memcached",
+        url: "memcached://10.0.1.101:11211",
         pool: "blue",
         version: "0.2.2"
       }]
     }
-    
-## Notes 
+
+## Notes
 
 ### Filtering
 
