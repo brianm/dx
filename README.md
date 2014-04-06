@@ -1,6 +1,6 @@
 # dx
 
-Service Discovery and Registration Service
+Service Registration and Discovery Service
 
 # TODO
 ## Support TTL Announcements
@@ -11,9 +11,21 @@ extend the ttl to a new duration.
 
 ### ZooKeeper Implementation Notes
 
-Because ZK has no concept of TTL, and ephemeral isn't what we want (dx
-server holding ephemeral node goign down shouldnt whack the node),
-we'll use ZK leader election and do TTL counts on the leader.
+Option 1, because ZK has no concept of TTL, and ephemeral isn't what
+we want (dx server holding ephemeral node going down shouldnt whack
+the node), we'll use ZK leader election and do TTL counts on the
+leader.
+
+Option 2, use ephemeral nodes from a particular dx instance, and
+require announcer heartbeat with *that node* to maintain the ephemeral
+node. This means clients must be able to directly address nodes, ie,
+not through an LB. Ideally, we would keep a connection open, but
+WebSockets are a pain compared to HTTP, and they are the natural thing
+to use.
+
+Option 3, expose STOMP, which is stream oriented. Stilts makes that
+fairly reasonable. If you want TTL/Ephemeral then you connect via
+stomp and maintain it that way. This is still faily inconvenient.
 
 ## Make ZooKeeper Storage Reasonably Efficient
 
