@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 import io.xn.dx.reps.Service;
 import org.apache.curator.framework.CuratorFramework;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class ZooKeeperStorage implements Storage
     }
 
     @Override
-    public Service create(final Service d)
+    public Service create(URI _, final Service d)
     {
         UUID id = UUID.randomUUID();
         Service s = d.withId(id.toString());

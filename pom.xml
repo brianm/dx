@@ -139,6 +139,11 @@
             <artifactId>resteasy-validator-provider-11</artifactId>
             <version>${resteasy.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.airlift</groupId>
+            <artifactId>units</artifactId>
+            <version>0.87</version>
+        </dependency>
 
         <!-- test dependencies -->
         <dependency>

@@ -38,9 +38,9 @@ public class ServiceResource
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response post(Service service)
+    public Response post(@Context UriInfo uris, Service service)
     {
-        final Service stored = storage.create(service);
+        final Service stored = storage.create(uris.getRequestUriBuilder().path("/").build(), service);
         return Response.created(stored.getLinks().get("self").getHref()).entity(stored).build();
     }
 

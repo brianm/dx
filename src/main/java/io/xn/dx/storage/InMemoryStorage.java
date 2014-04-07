@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.xn.dx.reps.Service;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -16,7 +17,7 @@ public class InMemoryStorage implements Storage
     private final ConcurrentMap<String, Service> data = Maps.newConcurrentMap();
 
     @Override
-    public Service create(final Service d)
+    public Service create(URI _, final Service d)
     {
         String id = Long.toString(ids.getAndIncrement());
         Service stored = d.withId(id);

@@ -41,8 +41,8 @@ public abstract class BaseStorageTest
                                   Version.valueOf("1.0.1"),
                                   "bar",
                                   Optional.of(Status.unavailable));
-        this.foo = storage.create(foo);
-        this.bar = storage.create(bar);
+        this.foo = storage.create(URI.create("/"), foo);
+        this.bar = storage.create(URI.create("/"), bar);
     }
 
     @After
