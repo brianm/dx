@@ -1,6 +1,7 @@
-package io.xn.dx.vendor;
+package io.xn.dx.ext;
 
 import com.google.common.base.Charsets;
+import io.xn.dx.vendor.EmbeddedZooKeeperRule;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Rule;
 import org.junit.Test;
