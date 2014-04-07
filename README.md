@@ -19,9 +19,9 @@ leader.~~
 Option 2, use ephemeral nodes from a particular dx instance, and
 require announcer heartbeat with *that node* to maintain the ephemeral
 node. This means clients must be able to directly address nodes, ie,
-not through an LB. Ideally, we would keep a connection open, but
-WebSockets are a pain compared to HTTP, and they are the natural thing
-to use.
+not through an LB. This can be encouraged by creating a
+<code>rel=ttl</code> link which definitely goes directly to the host
+(ie, always fully qualified if zk in use).
 
 ~~Option 3, expose STOMP, which is stream oriented. Stilts makes that
 fairly reasonable. If you want TTL/Ephemeral then you connect via
