@@ -34,7 +34,7 @@ public class StatusResourceTest
     }
 
     @Test
-    public void statusDefaultsToUnavailable() throws Exception
+    public void statusDefaultsToUnknown() throws Exception
     {
         Service one = app.createService(URI.create("http://foo"),
                                         "foo",
@@ -44,7 +44,7 @@ public class StatusResourceTest
 
         URI status_uri = one.getLinks().get("status").getHref();
         JsonNode node = app.GET(status_uri);
-        assertThat(node.at("/status")).textEquals("unavailable");
+        assertThat(node.at("/status")).textEquals("unknown");
     }
 
     @Test
