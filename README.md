@@ -3,29 +3,22 @@
 Service Registration and Discovery Service
 
 # TODO
+## Support Service Deletion
+
+DELETE or POST ?delete=true to a service should remove it.
+
 ## Support TTL Announcements
 
-We should be able to make an announcement with a TTL. If a srv is
-posted with a TTL, a renew link will be available which can be used to
-extend the ttl to a new duration.
+Finish heartbeat support in InMemoryStorage and ZooKeeperStorage.
 
 ### ZooKeeper Implementation Notes
 
-~~Option 1, because ZK has no concept of TTL, and ephemeral isn't what
-we want (dx server holding ephemeral node going down shouldnt whack
-the node), we'll use ZK leader election and do TTL counts on the
-leader.~~
-
-Option 2, use ephemeral nodes from a particular dx instance, and
-require announcer heartbeat with *that node* to maintain the ephemeral
-node. This means clients must be able to directly address nodes, ie,
-not through an LB. This can be encouraged by creating a
+Use ephemeral nodes from a particular dx instance, and require
+announcer heartbeat with *that node* to maintain the ephemeral node.
+This means clients must be able to directly address nodes, ie, not
+through an LB. This can be encouraged by creating a
 <code>rel=ttl</code> link which definitely goes directly to the host
 (ie, always fully qualified if zk in use).
-
-~~Option 3, expose STOMP, which is stream oriented. Stilts makes that
-fairly reasonable. If you want TTL/Ephemeral then you connect via
-stomp and maintain it that way. This is still faily inconvenient.~~
 
 ## Make ZooKeeper Storage Reasonably Efficient
 
@@ -38,6 +31,10 @@ Allow dx to start as a sidecar service for another service -- it will
 post and maintain an announcement on behalf of that service as long as
 it runs. This generally isn't as reliable as the service doing the
 announcement itself, but is still pretty useful :-)
+
+## Gossip Storage
+
+OR-Set based gossip storage layer
 
 # API
 ## Basic service registration:
