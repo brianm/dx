@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
 import io.xn.dx.vendor.DxServerRule;
-import io.xn.dx.version.Version;
+import io.xn.dx.reps.Version;
 import org.junit.Rule;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package io.xn.dx.version;
+package io.xn.dx.reps;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;

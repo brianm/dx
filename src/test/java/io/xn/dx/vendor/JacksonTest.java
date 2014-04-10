@@ -1,6 +1,6 @@
 package io.xn.dx.vendor;
 
-import io.xn.dx.version.Version;
+import io.xn.dx.reps.Version;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

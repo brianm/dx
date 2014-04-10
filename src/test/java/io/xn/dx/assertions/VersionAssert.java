@@ -1,7 +1,6 @@
 package io.xn.dx.assertions;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import io.xn.dx.version.Version;
+import io.xn.dx.reps.Version;
 import org.assertj.core.api.AbstractAssert;
 
 public class VersionAssert extends AbstractAssert<VersionAssert, Version>

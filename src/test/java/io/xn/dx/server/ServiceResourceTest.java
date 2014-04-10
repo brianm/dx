@@ -7,7 +7,7 @@ import io.xn.dx.Json;
 import io.xn.dx.ext.JacksonEntity;
 import io.xn.dx.vendor.DxServerRule;
 import io.xn.dx.vendor.Jackson;
-import io.xn.dx.version.Version;
+import io.xn.dx.reps.Version;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.junit.Rule;

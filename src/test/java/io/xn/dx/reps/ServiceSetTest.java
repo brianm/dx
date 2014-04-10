@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.airlift.units.Duration;
 import io.xn.dx.vendor.Jackson;
-import io.xn.dx.version.Version;
 import org.junit.Before;
 import org.junit.Test;
 

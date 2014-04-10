@@ -12,7 +12,7 @@ import io.xn.dx.reps.Status;
 import io.xn.dx.server.DxServerModule;
 import io.xn.dx.vendor.jaxrs.DaggerApplication;
 import io.xn.dx.vendor.jaxrs.DaggerApplicationDefaults;
-import io.xn.dx.version.Version;
+import io.xn.dx.reps.Version;
 import org.apache.http.client.fluent.Request;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.junit.rules.ExternalResource;

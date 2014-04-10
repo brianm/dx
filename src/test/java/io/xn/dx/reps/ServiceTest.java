@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
 import io.airlift.units.Duration;
 import io.xn.dx.vendor.Jackson;
-import io.xn.dx.version.Version;
 import org.junit.Test;
 
 import java.net.URI;

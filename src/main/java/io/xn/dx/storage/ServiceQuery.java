@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
-import io.xn.dx.version.Version;
+import io.xn.dx.reps.Version;
 
 import java.util.List;
 import java.util.Map;
