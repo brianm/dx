@@ -2,6 +2,7 @@ package io.xn.dx.storage;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import io.airlift.units.Duration;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
 import io.xn.dx.version.Version;
@@ -31,16 +32,21 @@ public abstract class BaseStorageTest
     public void setUp() throws Exception
     {
         this.storage = createStorage();
-        Service foo = new Service(URI.create("http://foo:8989/"),
+        Service foo = new Service(Optional.<String>absent(),
+                                  URI.create("http://foo:8989/"),
                                   "general",
                                   Version.valueOf("1.1.2"),
                                   "foo",
-                                  Optional.of(Status.ok));
-        Service bar = new Service(URI.create("http://bar:8989/"),
+                                  Optional.of(Status.ok),
+                                  Optional.<Duration>absent());
+
+        Service bar = new Service(Optional.<String>absent(),
+                                  URI.create("http://bar:8989/"),
                                   "general",
                                   Version.valueOf("1.0.1"),
                                   "bar",
-                                  Optional.of(Status.unavailable));
+                                  Optional.of(Status.unavailable),
+                                  Optional.<Duration>absent());
         this.foo = storage.create(URI.create("/"), foo);
         this.bar = storage.create(URI.create("/"), bar);
     }

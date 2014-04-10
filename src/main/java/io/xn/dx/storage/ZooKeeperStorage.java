@@ -25,7 +25,7 @@ public class ZooKeeperStorage implements Storage
     }
 
     @Override
-    public Service create(URI _, final Service d)
+    public Service create(URI ttlBaseUri, final Service d)
     {
         UUID id = UUID.randomUUID();
         Service s = d.withId(id.toString());

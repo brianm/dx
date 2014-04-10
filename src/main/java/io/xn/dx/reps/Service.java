@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import io.airlift.units.Duration;
 import io.xn.dx.version.Version;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -13,21 +12,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.net.URI;
 import java.util.Map;
-import java.util.Set;
 
 public class Service
 {
-    /**
-     * _links: {
-     * self: { href: "/srv/123abc" },
-     * status: { href: "/srv/123abc/status" },
-     * },
-     * status: "ok",
-     * type: "memcached",
-     * url: "memcached://10.0.1.100:11211",
-     * pool: "general",
-     * version: "0.2.3"
-     */
     private final URI url;
     private final String pool;
     private final Version version;
@@ -49,21 +36,6 @@ public class Service
         this(id, url, pool, version, type, status.or(Status.unavailable), ttl);
     }
 
-    public Service(URI url,
-                   String pool,
-                   Version version,
-                   String type,
-                   Optional<Status> status)
-    {
-        this(Optional.<String>absent(),
-             url,
-             pool,
-             version,
-             type,
-             status.or(Status.unavailable),
-             Optional.<Duration>absent());
-    }
-
     Service(final Optional<String> id,
             final URI url,
             final String pool,
@@ -82,7 +54,7 @@ public class Service
         }
         this.ttl = ttl;
         if (ttl.isPresent()) {
-            links.put("ttl", new Link(URI.create("/srv/" + id.get() + "/ttl")));
+            links.put("heartbeat", new Link(URI.create("/srv/" + id.get() + "/heartbeat")));
         }
         this.url = url;
         this.pool = pool;
@@ -96,13 +68,13 @@ public class Service
      * Solely for creating full urls in links
      */
     private Service(final Optional<String> id,
-            final URI url,
-            final String pool,
-            final Version version,
-            final String type,
-            final Status status,
-            final Optional<Duration> ttl,
-            final Map<String, Link> links)
+                    final URI url,
+                    final String pool,
+                    final Version version,
+                    final String type,
+                    final Status status,
+                    final Optional<Duration> ttl,
+                    final Map<String, Link> links)
     {
         this.id = id;
         this.ttl = ttl;
@@ -150,6 +122,30 @@ public class Service
         return links;
     }
 
+    public Service withHeartBeatBaseUri(final URI ttlBaseUri)
+    {
+        if (ttl.isPresent()) {
+            Link hb_link = this.getLinks().get("heartbeat");
+            Link resolved_hb_link = new Link(ttlBaseUri.resolve(hb_link.getHref()));
+            Map<String, Link> new_links = ImmutableMap.<String, Link>builder()
+                                                      .putAll((Maps.filterKeys(links, (s) -> !"heartbeat".equals(s))))
+                                                      .put("heartbeat", resolved_hb_link)
+                                                      .build();
+            return new Service(id,
+                               getUrl(),
+                               getPool(),
+                               getVersion(),
+                               getType(),
+                               getStatus(),
+                               getTtl(),
+                               new_links);
+        }
+        else
+        {
+            return this;
+        }
+    }
+
     public Service withId(final String id)
     {
         return new Service(Optional.of(id),
@@ -159,22 +155,6 @@ public class Service
                            getType(),
                            getStatus(),
                            getTtl());
-    }
-
-    public Service withResolvedLinkUris(URI base, String... rels) {
-        ImmutableMap.Builder<String, Link> new_links = ImmutableMap.builder();
-        Set<String> to_resolve = Sets.newHashSet(rels);
-        for (String rel : this.links.keySet()) {
-            Link link = this.links.get(rel);
-            if (to_resolve.contains(rel)) {
-                Link new_link = new Link(base.resolve(link.getHref()));
-                new_links.put(rel, new_link);
-            }
-            else {
-                new_links.put(rel, link);
-            }
-        }
-        return new Service(id, url, pool, version, type, status, ttl, new_links.build());
     }
 
     @Override

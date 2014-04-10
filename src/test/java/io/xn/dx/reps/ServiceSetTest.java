@@ -1,11 +1,12 @@
 package io.xn.dx.reps;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.xn.dx.version.Version;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import io.airlift.units.Duration;
 import io.xn.dx.vendor.Jackson;
+import io.xn.dx.version.Version;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,16 +24,20 @@ public class ServiceSetTest
     {
         ss = ServiceSet.build(ImmutableMap.of("type", "memcached"),
                               "17",
-                              ImmutableList.of(new Service(URI.create("memcached://hello:11211"),
+                              ImmutableList.of(new Service(Optional.of("0"),
+                                                           URI.create("memcached://hello:11211"),
                                                            "general",
                                                            Version.valueOf("1.2.3"),
                                                            "memcached",
-                                                           Optional.<Status>absent()).withId("0"),
-                                               new Service(URI.create("memcached://world:11211"),
+                                                           Optional.<Status>absent(),
+                                                           Optional.<Duration>absent()),
+                                               new Service(Optional.of("1"),
+                                                           URI.create("memcached://world:11211"),
                                                            "general",
                                                            Version.valueOf("1.2.3"),
                                                            "memcached",
-                                                           Optional.<Status>absent()).withId("1")
+                                                           Optional.<Status>absent(),
+                                                           Optional.<Duration>absent())
                               )
         );
     }

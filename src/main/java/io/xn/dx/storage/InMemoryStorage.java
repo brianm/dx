@@ -17,10 +17,11 @@ public class InMemoryStorage implements Storage
     private final ConcurrentMap<String, Service> data = Maps.newConcurrentMap();
 
     @Override
-    public Service create(URI _, final Service d)
+    public Service create(URI ttlBaseUri, final Service d)
     {
         String id = Long.toString(ids.getAndIncrement());
-        Service stored = d.withId(id);
+        Service stored = d.withId(id).withHeartBeatBaseUri(ttlBaseUri);
+
         data.put(id, stored);
         return stored;
     }

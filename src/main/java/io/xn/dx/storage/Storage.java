@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface Storage
 {
-    Service create(URI baseUri, Service d) throws StorageException;
+    Service create(URI ttlBaseUri, Service d) throws StorageException;
 
     Optional<Service> lookup(String id) throws StorageException;
 
