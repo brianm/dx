@@ -33,7 +33,7 @@ public class Service
                    @JsonProperty("status") Optional<Status> status,
                    @JsonProperty("ttl") Optional<Duration> ttl)
     {
-        this(id, url, pool, version, type, status.or(Status.unavailable), ttl);
+        this(id, url, pool, version, type, status.or(Status.unknown), ttl);
     }
 
     Service(final Optional<String> id,
@@ -172,5 +172,10 @@ public class Service
     public Optional<Duration> getTtl()
     {
         return ttl;
+    }
+
+    public Service withStatus(final Status status)
+    {
+        return new Service(id, url, pool, version, type, status, ttl, links);
     }
 }

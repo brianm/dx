@@ -62,7 +62,7 @@ class ServiceQuery
         @Override
         public boolean apply(final Service input)
         {
-            return value == input.getStatus();
+            return value.equals(input.getStatus());
         }
     }
 

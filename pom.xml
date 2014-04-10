@@ -118,11 +118,12 @@
             <artifactId>undertow-servlet</artifactId>
             <version>${undertow.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.undertow</groupId>
-            <artifactId>undertow-websockets-jsr</artifactId>
-            <version>${undertow.version}</version>
-        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>io.undertow</groupId>-->
+            <!--<artifactId>undertow-websockets-jsr</artifactId>-->
+            <!--<version>${undertow.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>

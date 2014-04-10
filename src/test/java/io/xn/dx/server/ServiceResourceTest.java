@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.common.collect.ImmutableMap;
 import io.xn.dx.Json;
 import io.xn.dx.ext.JacksonEntity;
+import io.xn.dx.vendor.DxServerRule;
 import io.xn.dx.vendor.Jackson;
-import io.xn.dx.vendor.JaxDaggerRule;
 import io.xn.dx.version.Version;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
@@ -25,7 +25,7 @@ public class ServiceResourceTest
     private static final ObjectReader mapper = Jackson.getReader();
 
     @Rule
-    public JaxDaggerRule app = new JaxDaggerRule();
+    public DxServerRule app = new DxServerRule();
 
     @Test
     public void testPostService() throws Exception

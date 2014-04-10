@@ -39,13 +39,12 @@ public abstract class BaseStorageTest
                                   "foo",
                                   Optional.of(Status.ok),
                                   Optional.<Duration>absent());
-
         Service bar = new Service(Optional.<String>absent(),
                                   URI.create("http://bar:8989/"),
                                   "general",
                                   Version.valueOf("1.0.1"),
                                   "bar",
-                                  Optional.of(Status.unavailable),
+                                  Optional.of(Status.unknown),
                                   Optional.<Duration>absent());
         this.foo = storage.create(URI.create("/"), foo);
         this.bar = storage.create(URI.create("/"), bar);
@@ -121,5 +120,21 @@ public abstract class BaseStorageTest
     {
         Set<Service> rs = storage.query(ImmutableMap.of("version", "1.1"));
         assertThat(rs).containsOnly(foo);
+    }
+
+    @Test
+    public void testUpdateStatus() throws Exception
+    {
+        Service f1 = storage.lookup(foo.getId().get()).get();
+        assertThat(f1.getStatus()).isEqualTo(Status.ok);
+
+        Optional<Service> updated = storage.updateStatus(foo.getId().get(), Status.valueOf("green"));
+        assertThat(updated).isPresent();
+        assertThat(updated.get().getStatus()).isEqualTo(Status.valueOf("green"));
+
+        Service f2 = storage.lookup(foo.getId().get()).get();
+        assertThat(f2.getStatus()).isEqualTo(Status.valueOf("green"));
+
+
     }
 }

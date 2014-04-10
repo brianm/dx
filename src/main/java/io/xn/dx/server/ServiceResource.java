@@ -2,12 +2,15 @@ package io.xn.dx.server;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
+import io.xn.dx.reps.HalContainer;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.ServiceSet;
+import io.xn.dx.reps.Status;
 import io.xn.dx.storage.Storage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -69,6 +72,16 @@ public class ServiceResource
         else {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+    }
+
+    @Path("/{id}/status")
+    public StatusResource status(@PathParam("id") String id) {
+        return new StatusResource(storage, id);
+    }
+
+    @Path("/{id}/heartbeat")
+    public HeartbeatResource heartbeat(@PathParam("id") String id) {
+        return new HeartbeatResource(storage, id);
     }
 }
 

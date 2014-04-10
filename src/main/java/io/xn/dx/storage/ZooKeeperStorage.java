@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import io.xn.dx.reps.Service;
+import io.xn.dx.reps.Status;
 import org.apache.curator.framework.CuratorFramework;
 
 import java.net.URI;
@@ -16,16 +17,16 @@ import java.util.UUID;
 public class ZooKeeperStorage implements Storage
 {
     private final CuratorFramework curator;
-    private final ObjectMapper om;
+    private final ObjectMapper mapper;
 
-    public ZooKeeperStorage(CuratorFramework curator, ObjectMapper om)
+    public ZooKeeperStorage(CuratorFramework curator, ObjectMapper mapper)
     {
         this.curator = curator;
-        this.om = om;
+        this.mapper = mapper;
     }
 
     @Override
-    public Service create(URI ttlBaseUri, final Service d)
+    public Service create(URI heartbeatBaseUri, final Service d)
     {
         UUID id = UUID.randomUUID();
         Service s = d.withId(id.toString());
@@ -50,7 +51,7 @@ public class ZooKeeperStorage implements Storage
     {
         try
         {
-            return om.writeValueAsBytes(s);
+            return mapper.writeValueAsBytes(s);
         }
         catch (JsonProcessingException e)
         {
@@ -67,7 +68,7 @@ public class ZooKeeperStorage implements Storage
             if (data == null) {
                 return Optional.absent();
             }
-            return Optional.of(om.readValue(data, Service.class));
+            return Optional.of(mapper.readValue(data, Service.class));
         }
         catch (Exception e)
         {
@@ -91,5 +92,25 @@ public class ZooKeeperStorage implements Storage
         {
             throw new StorageException("unable to execute query", e);
         }
+    }
+
+    @Override
+    public Optional<Service> updateStatus(final String id, final Status status)
+    {
+        Optional<Service> s =  lookup(id);
+        if (!s.isPresent()) {
+            return s;
+        }
+        Service old = s.get();
+        Service ns = old.withStatus(status);
+        try
+        {
+            curator.setData().forPath("/" + id, mapper.writeValueAsBytes(ns));
+        }
+        catch (Exception e)
+        {
+            throw new StorageException("unable to serialize service", e);
+        }
+        return Optional.of(ns);
     }
 }
