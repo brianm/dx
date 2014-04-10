@@ -32,6 +32,7 @@ public class ServiceTest
         assertThat(root.at("/url")).textEquals("memcached://cache7.snv1:11211");
         assertThat(root.at("/pool")).textEquals("general");
         assertThat(root.at("/type")).textEquals("foo");
+        assertThat(root.at("/ttl")).textEquals("100.00ms");
         assertThat(root.at("/version")).textEquals("1.2.3");
         assertThat(root.at("/status")).textEquals("ok");
         assertThat(root.at("/id")).textEquals("123");

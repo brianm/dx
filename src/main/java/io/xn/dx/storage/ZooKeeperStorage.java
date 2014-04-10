@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
+import io.airlift.units.Duration;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
 import org.apache.curator.framework.CuratorFramework;
@@ -32,6 +33,9 @@ public class ZooKeeperStorage implements Storage
         Service s = d.withId(id.toString());
         byte[] data = jsonify(s);
         store(id, data);
+        if (s.getTtl().isPresent()) {
+            monitor(s);
+        }
         return s;
     }
 
@@ -112,5 +116,16 @@ public class ZooKeeperStorage implements Storage
             throw new StorageException("unable to serialize service", e);
         }
         return Optional.of(ns);
+    }
+
+    private void monitor(final Service s)
+    {
+        throw new UnsupportedOperationException("Not Yet Implemented!");
+    }
+
+    @Override
+    public Optional<Duration> heartbeat(final String id, final Duration ttl)
+    {
+        throw new UnsupportedOperationException("Not Yet Implemented!");
     }
 }

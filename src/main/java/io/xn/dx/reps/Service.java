@@ -3,6 +3,7 @@ package io.xn.dx.reps;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import io.airlift.units.Duration;
@@ -50,11 +51,11 @@ public class Service
             // add links, this is gross, but whatever
             links.put("self", new Link(URI.create("/srv/" + id.get())));
             links.put("status", new Link(URI.create("/srv/" + id.get() + "/status")));
+            if (ttl.isPresent()) {
+                links.put("heartbeat", new Link(URI.create("/srv/" + id.get() + "/heartbeat")));
+            }
         }
         this.ttl = ttl;
-        if (ttl.isPresent()) {
-            links.put("heartbeat", new Link(URI.create("/srv/" + id.get() + "/heartbeat")));
-        }
         this.url = url;
         this.pool = pool;
         this.version = version;
@@ -121,11 +122,12 @@ public class Service
         return links;
     }
 
-    public Service withHeartBeatBaseUri(final URI ttlBaseUri)
+    public Service withHeartBeatBaseUri(final URI heartbeatBaseUri)
     {
+        Preconditions.checkState(id.isPresent(), "Cannot set heartbeat base uri unless an id is already present!");
         if (ttl.isPresent()) {
             Link hb_link = this.getLinks().get("heartbeat");
-            Link resolved_hb_link = new Link(ttlBaseUri.resolve(hb_link.getHref()));
+            Link resolved_hb_link = new Link(heartbeatBaseUri.resolve(hb_link.getHref()));
             Map<String, Link> new_links = ImmutableMap.<String, Link>builder()
                                                       .putAll((Maps.filterKeys(links, (s) -> !"heartbeat".equals(s))))
                                                       .put("heartbeat", resolved_hb_link)

@@ -3,6 +3,7 @@ package io.xn.dx.storage;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import io.airlift.units.Duration;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
 
@@ -22,8 +23,10 @@ public class InMemoryStorage implements Storage
     {
         String id = Long.toString(ids.getAndIncrement());
         Service stored = d.withId(id).withHeartBeatBaseUri(heartbeatBaseUri);
-
         data.put(id, stored);
+        if (stored.getTtl().isPresent()) {
+            monitor(stored);
+        }
         return stored;
     }
 
@@ -48,5 +51,16 @@ public class InMemoryStorage implements Storage
             return Optional.absent();
         }
         return Optional.of(data.compute(id, (k, v) -> v.withStatus(status)));
+    }
+
+    private void monitor(final Service stored)
+    {
+        throw new UnsupportedOperationException("Not Yet Implemented!");
+    }
+
+    @Override
+    public Optional<Duration> heartbeat(final String id, final Duration ttl)
+    {
+        throw new UnsupportedOperationException("Not Yet Implemented!");
     }
 }

@@ -1,8 +1,10 @@
 package io.xn.dx.storage;
 
 import com.google.common.base.Optional;
+import io.airlift.units.Duration;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
+import io.xn.dx.server.HeartbeatResource;
 
 import java.net.URI;
 import java.util.Map;
@@ -17,4 +19,6 @@ public interface Storage
     Set<Service> query(Map<String, String> filters) throws StorageException;
 
     Optional<Service> updateStatus(String id, Status status);
+
+    Optional<Duration> heartbeat(String id, Duration ttl);
 }

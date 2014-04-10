@@ -1,9 +1,11 @@
 package io.xn.dx.vendor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import dagger.Module;
 import dagger.ObjectGraph;
+import io.airlift.units.Duration;
 import io.undertow.Undertow;
 import io.xn.dx.NetUtil;
 import io.xn.dx.ext.JacksonEntity;
@@ -87,6 +89,21 @@ public class DxServerRule extends ExternalResource
                       .body(new JacksonEntity(entity))
                       .execute()
                       .handleResponse(new JsonNodeHandler());
+    }
+
+    public Service createService(final URI uri, final String type, final Version version, final String pool, final Duration ttl) throws IOException
+    {
+        Map<String, String> body = Maps.newHashMap();
+        body.put("url", uri.toString());
+        body.put("type", type);
+        body.put("version", version.toString());
+        body.put("pool", pool);
+        body.put("ttl", ttl.toString());
+        String json = Request.Post(resolve("/srv"))
+                             .body(new JacksonEntity(body))
+                             .execute()
+                             .returnContent().asString();
+        return Jackson.getMapper().readValue(json, Service.class);
     }
 
     @Module(includes = {DxServerModule.class, DaggerApplicationDefaults.class}, injects = DaggerApplication.class)
