@@ -1,11 +1,8 @@
 package io.xn.dx.cli;
 
 
-import com.google.common.base.Joiner;
 import dagger.Module;
 import dagger.ObjectGraph;
-import dagger.Provides;
-import io.airlift.command.Arguments;
 import io.airlift.command.Command;
 import io.airlift.command.Option;
 import io.undertow.Undertow;
@@ -16,12 +13,8 @@ import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-import java.util.List;
-
 @Module(includes = {DxServerModule.class, DaggerApplicationDefaults.class}, injects = DaggerApplication.class)
-@Command(name = "server", description = "Run the groupon server")
+@Command(name = "server", description = "Run the dx server")
 public class ServerCommand implements Runnable
 {
     private static final Logger log = LoggerFactory.getLogger(ServerCommand.class);
