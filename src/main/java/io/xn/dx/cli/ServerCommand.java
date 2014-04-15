@@ -40,6 +40,7 @@ public class ServerCommand implements Runnable
         ut.deploy(app);
         ut.start(Undertow.builder().addListener(bindPort, bindHost));
         try {
+            System.out.printf("Started on http://%s:%d\n", bindHost, bindPort);
             Thread.currentThread().join();
         }
         catch (InterruptedException e) {
