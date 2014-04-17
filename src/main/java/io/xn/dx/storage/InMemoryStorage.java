@@ -1,8 +1,6 @@
 package io.xn.dx.storage;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.airlift.units.Duration;
@@ -10,7 +8,6 @@ import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -18,14 +15,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class InMemoryStorage implements Storage
 {
     private final AtomicLong ids = new AtomicLong(0);
     private final ConcurrentMap<String, Service> data = Maps.newConcurrentMap();
-    private final Map<String, ScheduledFuture<?>> expiries = Maps.newConcurrentMap();
+    private final Map<String, ScheduledFuture<?>> expirations = Maps.newConcurrentMap();
 
     private final ScheduledExecutorService cron;
 
@@ -42,18 +37,30 @@ public class InMemoryStorage implements Storage
         data.put(id, stored);
         if (stored.getTtl().isPresent()) {
             ScheduledFuture<?> f = cron.schedule(() -> {
-                expiries.remove(id);
+                expirations.remove(id);
                 data.computeIfPresent(id, (k, v) -> v.withStatus(Status.expired));
             }, stored.getTtl().get().toMillis(), TimeUnit.MILLISECONDS);
-            expiries.put(id, f);
+            expirations.put(id, f);
         }
         return stored;
     }
+
+
 
     @Override
     public Optional<Service> lookup(final String id)
     {
         return Optional.fromNullable(data.get(id));
+    }
+
+    @Override
+    public void delete(final String id) throws StorageException
+    {
+        ScheduledFuture<?> f = expirations.remove(id);
+        if (f != null) {
+            f.cancel(false);
+        }
+        data.remove(id);
     }
 
     @Override
@@ -76,7 +83,7 @@ public class InMemoryStorage implements Storage
     @Override
     public Optional<Duration> heartbeat(final String id, final Duration ttl)
     {
-        ScheduledFuture<?> f = expiries.get(id);
+        ScheduledFuture<?> f = expirations.get(id);
         if (f == null) {
             return Optional.absent();
         }
@@ -88,10 +95,10 @@ public class InMemoryStorage implements Storage
         }
 
         ScheduledFuture<?> new_f = cron.schedule(() -> {
-            expiries.remove(id);
+            expirations.remove(id);
             data.computeIfPresent(id, (k, v) -> v.withStatus(Status.expired));
         }, ttl.toMillis(), TimeUnit.MILLISECONDS);
-        expiries.put(id, new_f);
+        expirations.put(id, new_f);
 
         return Optional.of(ttl);
     }

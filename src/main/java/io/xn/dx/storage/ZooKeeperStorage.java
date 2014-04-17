@@ -8,6 +8,7 @@ import io.airlift.units.Duration;
 import io.xn.dx.reps.Service;
 import io.xn.dx.reps.Status;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.zookeeper.KeeperException;
 
 import java.net.URI;
 import java.util.List;
@@ -69,14 +70,27 @@ public class ZooKeeperStorage implements Storage
         try
         {
             byte[] data = curator.getData().forPath("/" + id);
-            if (data == null) {
-                return Optional.absent();
-            }
             return Optional.of(mapper.readValue(data, Service.class));
+        }
+        catch (KeeperException.NoNodeException e) {
+            return Optional.absent();
         }
         catch (Exception e)
         {
             throw new StorageException(String.format("Unable to lookup %s", id), e);
+        }
+    }
+
+    @Override
+    public void delete(final String id) throws StorageException
+    {
+        try
+        {
+            curator.delete().forPath("/" + id);
+        }
+        catch (Exception e)
+        {
+            throw new StorageException("unable to delete " + id, e);
         }
     }
 

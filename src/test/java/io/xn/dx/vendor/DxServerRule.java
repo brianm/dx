@@ -91,6 +91,11 @@ public class DxServerRule extends ExternalResource
                       .handleResponse(new JsonNodeHandler());
     }
 
+    public int DELETE(final URI uri) throws IOException
+    {
+        return Request.Delete(getBaseUri().resolve(uri)).execute().returnResponse().getStatusLine().getStatusCode();
+    }
+
     public Service createService(final URI uri, final String type, final Version version, final String pool, final Duration ttl) throws IOException
     {
         Map<String, String> body = Maps.newHashMap();

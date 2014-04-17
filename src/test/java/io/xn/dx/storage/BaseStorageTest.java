@@ -30,11 +30,15 @@ public abstract class BaseStorageTest
     protected ClockedExecutorService clock;
 
     protected abstract Storage createStorage();
-
     protected abstract void releaseStorage(Storage s);
-
     protected abstract boolean isHeartbeatImplemented();
     protected abstract boolean isDeltaImplemented();
+
+    protected ClockedExecutorService getClockedExecutor()
+    {
+        return clock;
+    }
+
 
     @Before
     public final void setUp() throws Exception
@@ -180,8 +184,10 @@ public abstract class BaseStorageTest
         assertThat(svc.getStatus()).isEqualTo(Status.expired);
     }
 
-    protected ClockedExecutorService getClockedExecutor()
+    @Test
+    public void testDelete() throws Exception
     {
-        return clock;
+        storage.delete(foo.getId());
+        assertThat(storage.lookup(foo.getId())).isAbsent();
     }
 }

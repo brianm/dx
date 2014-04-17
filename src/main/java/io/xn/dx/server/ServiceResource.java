@@ -9,12 +9,12 @@ import io.xn.dx.storage.Storage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -57,17 +57,23 @@ public class ServiceResource
         return ServiceSet.build(filters, "NO", services);
     }
 
+    @DELETE
+    @Path("/{id}")
+    public void deleteById(@PathParam("id") String id) {
+        storage.delete(id);
+    }
+
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Service getById(@PathParam("id") String id)
+    public Response getById(@PathParam("id") String id)
     {
         Optional<Service> d = storage.lookup(id);
         if (d.isPresent()) {
-            return d.get();
+            return Response.ok(d.get()).build();
         }
         else {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 

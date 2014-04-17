@@ -25,6 +25,14 @@ public interface Storage
         }
     }
 
+    void delete(String id) throws StorageException;
+
+    default void delete(Optional<String> id) throws StorageException {
+        if (id.isPresent()) {
+            delete(id.get());
+        }
+    }
+
     Set<Service> query(Map<String, String> filters) throws StorageException;
 
     Optional<Service> updateStatus(String id, Status status);

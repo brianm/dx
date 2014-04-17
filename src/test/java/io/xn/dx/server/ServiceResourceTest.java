@@ -9,15 +9,18 @@ import io.xn.dx.vendor.DxServerRule;
 import io.xn.dx.vendor.Jackson;
 import io.xn.dx.reps.Version;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.fluent.Request;
 import org.junit.Rule;
 import org.junit.Test;
 
+import javax.ws.rs.WebApplicationException;
 import java.io.IOException;
 import java.net.URI;
 
 import static io.xn.dx.assertions.JsonNodeAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 
 public class ServiceResourceTest
@@ -113,12 +116,30 @@ public class ServiceResourceTest
         assertThat(root.at("/_links/delta")).hasField("href");
     }
 
-
-    private void createSrv(URI url, String type, Version version, String pool) throws IOException
+    @Test
+    public void testDelete() throws Exception
     {
-        Json.POST(app.resolve("srv"), ImmutableMap.of("url", url,
-                                                      "type", type,
-                                                      "version", version.toString(),
-                                                      "pool", pool));
+        URI srv_uri = createSrv(URI.create("http://foo-1.snc1/bar"), "foo", Version.valueOf("1.2.3"), "general");
+        int rs = app.DELETE(srv_uri);
+        assertThat(rs).isGreaterThanOrEqualTo(200).isLessThan(300);
+
+        try
+        {
+            app.GET(srv_uri);
+            fail("should have raised 404 excpetion");
+        }
+        catch (HttpResponseException e)
+        {
+            assertThat(e.getStatusCode()).isEqualTo(404);
+        }
+    }
+
+    private URI createSrv(URI url, String type, Version version, String pool) throws IOException
+    {
+        JsonNode node = Json.POST(app.resolve("srv"), ImmutableMap.of("url", url,
+                                                                      "type", type,
+                                                                      "version", version.toString(),
+                                                                      "pool", pool));
+        return URI.create(node.at("/_links/self/href").textValue());
     }
 }
