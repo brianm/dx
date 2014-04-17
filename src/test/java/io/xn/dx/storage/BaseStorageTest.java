@@ -9,28 +9,37 @@ import io.xn.dx.reps.Version;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.skife.clocked.ClockedExecutorService;
 
 import java.net.URI;
+import java.sql.Time;
 import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.guava.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assume.assumeThat;
 
 public abstract class BaseStorageTest
 {
     private Storage storage;
     private Service foo;
     private Service bar;
+    protected ClockedExecutorService clock;
 
     protected abstract Storage createStorage();
 
     protected abstract void releaseStorage(Storage s);
 
+    protected abstract boolean isHeartbeatImplemented();
+    protected abstract boolean isDeltaImplemented();
 
     @Before
-    public void setUp() throws Exception
+    public final void setUp() throws Exception
     {
+        clock = new ClockedExecutorService();
         this.storage = createStorage();
         Service foo = new Service(Optional.<String>absent(),
                                   URI.create("http://foo:8989/"),
@@ -38,7 +47,7 @@ public abstract class BaseStorageTest
                                   Version.valueOf("1.1.2"),
                                   "foo",
                                   Optional.of(Status.ok),
-                                  Optional.<Duration>absent());
+                                  Optional.of(Duration.valueOf("10ms")));
         Service bar = new Service(Optional.<String>absent(),
                                   URI.create("http://bar:8989/"),
                                   "general",
@@ -51,8 +60,9 @@ public abstract class BaseStorageTest
     }
 
     @After
-    public void tearDown() throws Exception
+    public final void tearDown() throws Exception
     {
+        clock.close();
         this.releaseStorage(storage);
         storage = null;
     }
@@ -134,7 +144,44 @@ public abstract class BaseStorageTest
 
         Service f2 = storage.lookup(foo.getId().get()).get();
         assertThat(f2.getStatus()).isEqualTo(Status.valueOf("green"));
+    }
 
+    @Test
+    public void testExpiresWhenTtlPasses() throws Exception
+    {
+        assumeThat("heartbeat is implemented", isHeartbeatImplemented(), equalTo(true));
 
+        Duration timeout = foo.getTtl().get();
+        clock.advance(1 + timeout.toMillis(), TimeUnit.MILLISECONDS).get();
+
+        Service svc = storage.lookup(foo.getId().get()).get();
+        assertThat(svc.getStatus()).isEqualTo(Status.expired);
+    }
+
+    @Test
+    public void testHeartbeatKeepsServiceAlive() throws Exception
+    {
+        assumeThat("heartbeat is implemented", isHeartbeatImplemented(), equalTo(true));
+
+        Duration timeout = foo.getTtl().get();
+        clock.advance(timeout.toMillis() - 1, TimeUnit.MILLISECONDS).get();
+
+        Service svc = storage.lookup(foo.getId()).get();
+        assertThat(svc.getStatus()).isEqualTo(Status.ok);
+
+        storage.heartbeat(foo.getId(), Duration.valueOf("10ms"));
+
+        clock.advance(9, TimeUnit.MILLISECONDS).get();
+        svc = storage.lookup(foo.getId()).get();
+        assertThat(svc.getStatus()).isEqualTo(Status.ok);
+
+        clock.advance(1, TimeUnit.MILLISECONDS).get();
+        svc = storage.lookup(foo.getId()).get();
+        assertThat(svc.getStatus()).isEqualTo(Status.expired);
+    }
+
+    protected ClockedExecutorService getClockedExecutor()
+    {
+        return clock;
     }
 }

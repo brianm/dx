@@ -15,6 +15,7 @@ import org.jboss.resteasy.plugins.validation.ValidatorContextResolver;
 
 import javax.inject.Singleton;
 import java.util.Set;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 @Module(complete = false, injects = DaggerApplication.class)
 public class DxServerModule
@@ -23,7 +24,7 @@ public class DxServerModule
     @Singleton
     public Storage storage()
     {
-        return new InMemoryStorage();
+        return new InMemoryStorage( new ScheduledThreadPoolExecutor(2));
     }
 
     @Provides(type = Provides.Type.SET_VALUES)

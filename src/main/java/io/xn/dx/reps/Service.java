@@ -179,4 +179,9 @@ public class Service
     {
         return new Service(id, url, pool, version, type, status, ttl, links);
     }
+
+    public Service withTtl(final Duration ttl)
+    {
+        return new Service(id, url, pool, version, type, status, Optional.of(ttl), links);
+    }
 }

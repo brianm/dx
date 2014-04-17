@@ -120,7 +120,7 @@ public class ZooKeeperStorage implements Storage
 
     private void monitor(final Service s)
     {
-        throw new UnsupportedOperationException("Not Yet Implemented!");
+//        throw new UnsupportedOperationException("Not Yet Implemented!");
     }
 
     @Override

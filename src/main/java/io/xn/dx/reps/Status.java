@@ -20,6 +20,7 @@ public class Status
 {
     public static final Status ok = new Status("ok");
     public static final Status unknown = new Status("unknown");
+    public static final Status expired = new Status("expired");
 
     private final String status;
 

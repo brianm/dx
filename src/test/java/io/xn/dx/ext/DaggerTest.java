@@ -21,11 +21,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DaggerTest
 {
     private MyApp app;
+    private ObjectGraph graph;
 
     @Before
     public void setUp() throws Exception
     {
-        final ObjectGraph graph = ObjectGraph.create(new MyModule(), new PluginTwoModule());
+        graph = ObjectGraph.create(new MyModule(), new PluginTwoModule());
         app = graph.get(MyApp.class);
     }
 

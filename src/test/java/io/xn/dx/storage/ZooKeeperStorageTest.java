@@ -2,7 +2,11 @@ package io.xn.dx.storage;
 
 import io.xn.dx.vendor.EmbeddedZooKeeperRule;
 import io.xn.dx.vendor.Jackson;
+import org.junit.Before;
 import org.junit.Rule;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assume.assumeThat;
 
 public class ZooKeeperStorageTest extends BaseStorageTest
 {
@@ -19,5 +23,17 @@ public class ZooKeeperStorageTest extends BaseStorageTest
     protected void releaseStorage(final Storage s)
     {
         // NOOP
+    }
+
+    @Override
+    protected boolean isHeartbeatImplemented()
+    {
+        return false;
+    }
+
+    @Override
+    protected boolean isDeltaImplemented()
+    {
+        return false;
     }
 }
