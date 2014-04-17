@@ -89,7 +89,7 @@ public class InMemoryStorage implements Storage
         }
 
         f.cancel(false);
-        Service old = data.computeIfPresent(id, (k, v) -> v.withTtl(ttl));
+        Service old = data.computeIfPresent(id, (k, v) -> v.withTtl(ttl).withStatus(Status.ok));
         if (old == null) {
             return Optional.absent();
         }

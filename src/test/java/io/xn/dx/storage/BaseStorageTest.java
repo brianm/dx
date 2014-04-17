@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.skife.clocked.ClockedExecutorService;
 
 import java.net.URI;
-import java.sql.Time;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
